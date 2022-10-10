@@ -12,22 +12,40 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ### Introduction
-Maintaining a stable body temperature is an important physiological role for humans, and thermoregulatory defenses keep the body in consistent temperatures. Examples of thermoregulatory defenses include shivering or sweating, which are responses invoked by the hypothalamus in an attempt to keep the body temperature steady under changing conditions @campbell2008body. The purpose of this study is to measure body temperatures of 4 different people under varying activity levels using the DHT11 sensor. After collecting this data, it was examined using a ggplot from R studio. The data from all subjects were combined into one table, and showed the standard deviations and means, and the temperature measurements for each activity level for each subject. 
+Maintaining a stable body temperature is an important physiological role for humans, and thermoregulatory defenses keep the body in consistent temperatures. Examples of thermoregulatory defenses include shivering or sweating, which are responses invoked by the hypothalamus in an attempt to keep the body temperature steady under changing conditions using @campbell2008body. The purpose of this study is to measure body temperatures of 4 different people under varying activity levels using the DHT11 sensor. After collecting this data, it was examined using a ggplot from R studio. The data from all subjects were combined into one table, and showed the standard deviations and means, and the temperature measurements for each activity level for each subject. 
 
 
 
 ### Methods
 In order to evaluate the effect of physical activity on body temperature, we recorded the axillary temperature (armpit) after a duration of inactivity and intense activity. We recorded these temperatures using a DHT11 sensor collected on Arduino software. The data from the four group members were then compiled into 8 different csvs detailing their active and inactive body temperatures.
-///<center>
-///![](Arduino_Uno.png)  
-///</center>
+<center>
+![](Arduino_Uno.png)  
+</center>
 The inactivity data for each member was taken on the couch for 100 seconds or until the temperature seemed to stabilize. Comparetively, for the activation period we all participated in the game, Just Dance, for five munites, and then sat down to measure the new body temperature for 100 seconds. We then plotted each member's temperature using a +/- standard deviation to compare the means of all of our temperatures. 
 
 ###Results 
+```{r}
+library(tidyverse)
+dat.f <- list.files(pattern = "couch|JustDance.csv") #find the files
 
+dat.l <- list() #make an empty list
+
+for(i in dat.f){
+  met.dat<- unlist(strsplit(i,"_")) #split of the filename string
+  who <- met.dat[1] #store the first element
+  activity <- gsub(".csv","",met.dat[2]) #store second element, dropping CSV with gsub()
+  dat.l[[i]]<- read_csv(i)%>%
+    mutate(who=who,activity=activity) #read, then store data with additional columns of metada in list as position unique to i
+  
+}
+dat <- do.call(rbind,dat.l) #combine the list into table
+
+dat%>%
+  ggplot()+geom_boxplot(aes(x=activity,y=degC))+facet_grid(.~who) #plot to see what we get
+```
 
 ### Discussion 
-
+need to do this 
 
 ### Contributions 
 John Santoianni: formatting code, creating layout and methods
