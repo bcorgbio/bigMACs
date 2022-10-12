@@ -51,7 +51,8 @@ dat%>%
 When we compare the interpersonal mean and median body temperatures after sitting on the couch versus after playing JustDance, we observe a difference of no more than 1°C. Since the confidence intervals also remain relatively stable and overlapped, we can conclude that there was not a significant change in body temperature due to physical activity. Any slight deviations in body temperature is more likely due to random and experimental errors. 
 
 ### Discussion 
-need to do this 
+Based on a study done by @satinoff1991elevated, mean female rat body temperatures measured via telemetry increased from 36.0°C to 36.5°C during the day and 38.1°C to 39.5°C during the night when "housed in activity wheels" over the course of a two week cycle. Their data is both consistent with our data in that there were no large changes to body temperature and inconsistent in that we did not observe a positive correlation between activity and increasing mean or median body temperature. In fact, our collected median body temperatures, which are less affected by outliers than mean body temperatures, also saw decreases when moving from post-couch to post-JustDance. Although we can say that endotherms, like rats and humans, do not suffer from significant changes in body temperature due to an inherent thermoregulation system, further work should be done to account for other factors, such as intensity of activity, duration of activity, and length of sampling (a day versus over cycle of weeks). 
+
 
 ### Contributions 
 John Santoianni: formatting code, creating layout and methods
