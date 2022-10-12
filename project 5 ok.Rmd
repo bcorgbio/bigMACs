@@ -23,8 +23,9 @@ In order to evaluate the effect of physical activity on body temperature, we rec
 </center>
 The inactivity data for each member was taken on the couch for 100 seconds or until the temperature seemed to stabilize. Comparetively, for the activation period we all participated in the game, Just Dance, for five munites, and then sat down to measure the new body temperature for 100 seconds. We then plotted each member's temperature using a +/- standard deviation to compare the means of all of our temperatures. 
 
-###Results 
-```{r}
+### Results 
+
+```{r, echo=FALSE, message = FALSE}
 library(tidyverse)
 dat.f <- list.files(pattern = "couch|JustDance.csv") #find the files
 
