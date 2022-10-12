@@ -21,11 +21,11 @@ In order to evaluate the effect of physical activity on body temperature, we rec
 <center>
 ![](Arduino_Uno.png)  
 </center>
-The inactivity data for each member was taken on the couch for 100 seconds or until the temperature seemed to stabilize. Comparetively, for the activation period we all participated in the game, Just Dance, for five munites, and then sat down to measure the new body temperature for 100 seconds. We then plotted each member's temperature using a +/- standard deviation to compare the means of all of our temperatures. 
+The inactivity data for each member was taken on the couch for 100 seconds or until the temperature seemed to stabilize. Comparetively, for the activation period we all participated in the game, Just Dance, for five minutes, and then sat down to measure the new body temperature for 100 seconds. We then plotted each member's temperature using a +/- standard deviation to compare the means of all of our temperatures. 
 
 ### Results 
 
-```{r, echo=FALSE, message = FALSE}
+```{r, echo=FALSE, message = FALSE, fig.cap= "Figure 1: Boxplots of body temperature data across all participants (Jack, John, Philip, Samantha) and activity types (after sitting on couch and after playing JustDance). Means are labelled within plots using a hollow rhombus"}
 library(tidyverse)
 dat.f <- list.files(pattern = "couch|JustDance.csv") #find the files
 
@@ -47,6 +47,8 @@ dat%>%
 
  #plot to see what we get
 ```
+
+When we compare the interpersonal mean and median body temperatures after sitting on the couch versus after playing JustDance, we observe a difference of no more than 1°C. Since the confidence intervals also remain relatively stable and overlapped, we can conclude that there was not a significant change in body temperature due to physical activity. Any slight deviations in body temperature is more likely due to random and experimental errors. 
 
 ### Discussion 
 need to do this 
