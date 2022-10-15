@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ### Introduction
-Maintaining a stable body temperature is an important physiological role for humans, and thermoregulatory defenses keep the body in consistent temperatures. Examples of thermoregulatory defenses include shivering or sweating, which are responses invoked by the hypothalamus in an attempt to keep the body temperature steady under changing conditions using @campbell2008body. The purpose of this study is to measure body temperatures of 4 different people under varying activity levels using the DHT11 sensor. After collecting this data, it was examined using a ggplot from R studio. The data from all subjects were combined into one table, and showed the standard deviations and means, and the temperature measurements for each activity level for each subject. 
+Maintaining a stable body temperature is an important physiological role for humans, and thermoregulatory defenses keep the body in consistent temperatures. Examples of thermoregulatory defenses include shivering or sweating, which are responses invoked by the hypothalamus in an attempt to keep the body temperature steady under changing conditions [@campbell2008body]. The purpose of this study is to measure body temperatures of 4 different people under varying activity levels using the DHT11 sensor. After collecting this data, it was examined using a ggplot from R studio. The data from all subjects were combined into one table, and showed the standard deviations and means, and the temperature measurements for each activity level for each subject. 
 
 
 
