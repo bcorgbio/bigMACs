@@ -8,7 +8,7 @@ output: html_document
 ### Introduction
 
 
-###Methods
+### Methods
 
 ```{r, echo= FALSE, include= FALSE}
 library(tidyverse)
@@ -129,6 +129,7 @@ hindwing.pca <-hindwings %>%
 
 ```
 
+#### PCA Analysis
 ```{r, echo= FALSE, message= FALSE}
 forewing.pca %>% 
   plot_PCA(title = "forewings")
@@ -136,6 +137,37 @@ forewing.pca %>%
 hindwing.pca %>% 
   plot_PCA(title = "hindwings")
 ```
+
+#### Comparitive Analysis
+```{r, echo= FALSE, message= FALSE}
+library(ape)
+
+lep.tree <- ape::read.tree("lep_tree2.tre") %>% ladderize()
+lep.tree$tip.label <- gsub("_"," ",lep.tree$tip.label)
+plot(lep.tree,cex=0.1)
+
+
+```
+
+```{r, echo= FALSE, include= FALSE}
+#connect tree to shapes
+
+#but we do have a file of species names and identifier for their outline names
+lep.sp <- read_csv("lep_image_data.csv")
+#identifier in this case is the file name without the extention
+
+out.data <- tibble(xy.file=basename(names(outs))) %>% 
+  mutate(identifier=gsub("XY_|_hindwing|_forewing|.txt","",xy.file)) %>% 
+  left_join(lep.sp)
+#make a new tibble without outline names but identifier names using gsub()
+#then we merge the species name list to the outlines list using the common identifiers
+
+hindwing.pca2 <-  tibble(xy.file=basename(rownames(hindwing.pca$x)),PC1=hindwing.pca$x[,1],PC2=hindwing.pca$x[,2]) %>% 
+  left_join(out.data)
+forewing.pca2 <-  tibble(xy.file=basename(rownames(forewing.pca$x)),PC1=forewing.pca$x[,1],PC2=forewing.pca$x[,2])%>% 
+  left_join(out.data)
+```
+
 
 ### Results
 
