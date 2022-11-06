@@ -3,7 +3,7 @@ title: "Project6"
 author: "bigMACs"
 date: "2022-11-06"
 output: html_document
-bibliogprahy: references6.bib
+bibliography: references6.bib
 
 ---
 
@@ -410,6 +410,10 @@ forePC2.res$res
 ### Discussion
 
 ### Contributions
+Jack: Methods + Intro + bib
+John: Intro + Results + bib
+Philip: Markdown File + Graphs + Code
+Samantha: Discussion
 
 ### References
 
