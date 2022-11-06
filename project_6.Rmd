@@ -11,8 +11,23 @@ bibliogprahy: Bib_6.bib
 Lepidopteras play valuable roles in the terrestrial ecosystems of the word. They are an order of insects cosnsisting of 160,000 species of butterflies and moths. They have both forewings and hindwings, each playing roles in functions such as flying and attracting mates. Even when their hindwing is cut off, reducing the surface area of their wing by one half, they are able to keep flying. However, with this loss of wing, the ability for linear flight and acceleration is severely weakened (@jantzen2008hindwings). Hindwings are essential in survival, enabling normal flight function and allowing lepidopterans to evade and defend against predators such as bats and birds. The size variation in the forewings and hindwings has allowed the lepidoptera to obtain high levels of flight and speed as well as directional inconsistnacy, which have evolved to pritotize these functions. The purpose of this study is to determine if the rates of wing-shape evolution between the hindwing and forweing are similar and if they have undergone significant shifts among lineages. Furthermore, we wanted to discover if these hindwing and forewing shapes were correlated with each other. The wings will be evaluated and compared through the phylogenetic analysis of over 200 species of Lepidoptera in a certain taxa. ​​
 
 
-
 ### Methods
+#### Image Acquisition 
+Images analyzed in this project were acquired by downloading the R package, rgif, which permits access to the Global Biodiversity Information Facility’s (GBIF) application programming interface. Records from GBIF were now accessible for all Lepidoptera analyzed below. 
+
+#### Digitization
+Right-wing shapes across ~200 species of Lepidoptera were examined utilizing the image analysis program FIJI. After opening each image, the following sequence was followed depending on scale bar, wing damage, and hindwing exposure. If a scale bar was present, the scale was set in mm. If the right-wing pair was damaged, the image was flipped horizontally. The wings were then traced utilizing the polygon selection tool. A script was created, and the selected points (x and y coordinates) were exported in a .txt file for further analysis.
+
+#### Shape & Comparative Analysis
+Outline-based shape analysis, utilizing Elliptical Fourier Analysis (EFA) and Principal Components Analysis (PCA), were performed to compare shape change between species. 
+PCA plot output for both forewing and hindwing can be referenced below (Figures 1 & 2). Evolutionary rates of the PC scores were observed across the Lepidoptera tree (Figure 3: Kawahara et al. 2019 study) and species information was added. 
+
+#### Evolutionary Rates & Shifts
+O’Meara et al. (2006)’s method, the “non-censored test” was utilized to estimate the rates of morphological evolution over a phylogenetic tree. Phylogenetic ridge regression (Kratsch and McHardy 2014) was then utilized to determine whether the evolutionary shift was to a slower or faster rate. The regressions are based on the phenotype values at each node vs. time between nodes and along the path. The value of the slope parameter of these regressions is the rate.
+
+#### Shape Evolution Correlation
+Phylogenetic independent contrasts (PIC) analysis was performed to investigate the correlation in hind and forewing shape evolution. R-squared values were then found by creating a linear model.
+
 
 ```{r, echo= FALSE, include= FALSE}
 library(tidyverse)
