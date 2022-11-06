@@ -258,6 +258,8 @@ names(fore.pc2) <-  forewing.pca2 %>%
 
 ### Results
 
+#### Evolutionary Rates: Hindwing vs. Forewing
+
 ```{r, message= FALSE, include= FALSE}
 library(phytools)
 forePC1.BM<-brownie.lite(lep.tree2,fore.pc1*10)
@@ -269,8 +271,8 @@ hindPC2.BM<-brownie.lite(lep.tree2,hind.pc2*10)
 
 ```{r}
 forePC1.BM$sig2.single
-hindPC1.BM$sig2.single
 forePC2.BM$sig2.single
+hindPC1.BM$sig2.single
 hindPC2.BM$sig2.single
 ```
 
