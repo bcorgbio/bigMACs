@@ -269,12 +269,43 @@ forePC2.BM<-brownie.lite(lep.tree2,fore.pc2*10)
 hindPC2.BM<-brownie.lite(lep.tree2,hind.pc2*10)
 ```
 
-```{r}
+```{r, echo= FALSE}
 forePC1.BM$sig2.single
 forePC2.BM$sig2.single
 hindPC1.BM$sig2.single
 hindPC2.BM$sig2.single
 ```
+
+#### Shifts in Evolutionary Rates
+
+```{r, echo= FALSE, message= FALSE}
+library(RRphylo)
+library(ggtree)
+library(wesanderson)
+
+hindPC1.RR <- RRphylo(tree=lep.tree2,y=hind.pc1)
+hindPC2.RR <- RRphylo(tree=lep.tree2,y=hind.pc2)
+
+forePC1.RR <- RRphylo(tree=lep.tree2,y=fore.pc1)
+forePC2.RR <- RRphylo(tree=lep.tree2,y=hind.pc2)
+```
+
+```{r, echo= FALSE, message= FALSE}
+hindPC1.SS<- search.shift(RR=hindPC1.RR,status.type="clade")
+hindPC1.SS$single.clades
+
+
+
+hindPC2.SS<- search.shift(RR=hindPC2.RR,status.type="clade")
+hindPC2.SS$single.clades
+
+forePC1.SS<- search.shift(RR=forePC1.RR,status.type="clade")
+forePC1.SS$single.clades
+forePC2.SS<- search.shift(RR=forePC2.RR,status.type="clade")
+forePC2.SS$single.clades
+
+```
+
 
 
 
