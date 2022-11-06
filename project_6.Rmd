@@ -372,7 +372,7 @@ plot_SS <- function(tre=NULL,SS=NULL,tax=NULL){
 tax.names <- readRDS("Lep_classification.RDS")
 ```
 
-##### HindwingPC1
+##### Hindwing PC1
 
 ```{r, echo=FALSE, message=FALSE}
 hindPC1.res <- plot_SS(lep.tree2,hindPC1.SS,tax = tax.names)
@@ -380,7 +380,7 @@ hindPC1.res$plot
 hindPC1.res$res
 ```
 
-##### HindwingPC2
+##### Hindwing PC2
 
 ```{r, echo=FALSE, message=FALSE}
 hindPC2.res <- plot_SS(lep.tree2,hindPC2.SS,tax = tax.names)
@@ -388,7 +388,7 @@ hindPC2.res$plot
 hindPC2.res$res
 ```
 
-#### ForewingPC1
+#### Forewing PC1
 
 ```{r, echo=FALSE, message=FALSE}
 forePC1.res <- plot_SS(lep.tree2,forePC1.SS,tax = tax.names)
@@ -396,7 +396,7 @@ forePC1.res$plot
 forePC1.res$res
 ```
 
-#### ForewingPC2
+#### Forewing PC2
 
 ```{r, echo=FALSE, message=FALSE}
 forePC2.res <- plot_SS(lep.tree2,forePC2.SS,tax = tax.names)
@@ -405,6 +405,41 @@ forePC2.res$res
 ```
 
 
+#### Shape Evolution Correlation
+
+```{r, include=FALSE}
+hindPC1.pic <- pic(hind.pc1,phy = lep.tree2)
+hindPC2.pic <- pic(hind.pc2,phy = lep.tree2)
+forePC1.pic <- pic(fore.pc1,phy = lep.tree2)
+forePC2.pic <- pic(fore.pc2, phy= lep.tree2)
+```
+
+```{r, message= FALSE, echo= FALSE}
+PC.pic <- tibble(
+  hind1=hindPC1.pic,
+  fore1=forePC1.pic,
+  hind2=hindPC2.pic,
+  fore2=forePC2.pic
+)
+
+PC.pic %>% 
+  ggplot(aes(x=fore1,y=hind1))+geom_point()+geom_smooth(method="lm")
+summary(lm(hind1~fore1,PC.pic))
+
+summary(lm(hind1~fore1 + fore2,PC.pic))
+summary(lm(hind1~fore1*fore2,PC.pic))
+
+```
+
+
+```{r, message= FALSE, echo= FALSE}
+PC.pic %>% 
+  ggplot(aes(x=fore2,y=hind2))+geom_point()+geom_smooth(method="lm")
+summary(lm(hind2~fore2,PC.pic))
+summary(lm(hind2~fore2 + fore1,PC.pic))
+summary(lm(hind2~fore2*fore1,PC.pic))
+
+```
 
 
 ### Discussion
