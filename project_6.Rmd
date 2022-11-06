@@ -3,7 +3,7 @@ title: "Project6"
 author: "bigMACs"
 date: "2022-11-06"
 output: html_document
-bibliogprahy: Bib_6.bib
+bibliogprahy: references6.bib
 
 ---
 
@@ -20,10 +20,10 @@ Right-wing shapes across ~200 species of Lepidoptera were examined utilizing the
 
 #### Shape & Comparative Analysis
 Outline-based shape analysis, utilizing Elliptical Fourier Analysis (EFA) and Principal Components Analysis (PCA), were performed to compare shape change between species. 
-PCA plot output for both forewing and hindwing can be referenced below (Figures 1 & 2). Evolutionary rates of the PC scores were observed across the Lepidoptera tree (Figure 3: Kawahara et al. 2019 study) and species information was added. 
+PCA plot output for both forewing and hindwing can be referenced below (Figures 1 & 2). Evolutionary rates of the PC scores were observed across the Lepidoptera tree (@kawahara2019phylogenomics) and species information was added. 
 
 #### Evolutionary Rates & Shifts
-O’Meara et al. (2006)’s method, the “non-censored test” was utilized to estimate the rates of morphological evolution over a phylogenetic tree. Phylogenetic ridge regression (Kratsch and McHardy 2014) was then utilized to determine whether the evolutionary shift was to a slower or faster rate. The regressions are based on the phenotype values at each node vs. time between nodes and along the path. The value of the slope parameter of these regressions is the rate.
+The “non-censored test” (@o2006testing) was utilized to estimate the rates of morphological evolution over a phylogenetic tree. Phylogenetic ridge regression (@kratsch2014ridgerace) was then utilized to determine whether the evolutionary shift was to a slower or faster rate. The regressions are based on the phenotype values at each node vs. time between nodes and along the path. The value of the slope parameter of these regressions is the rate.
 
 #### Shape Evolution Correlation
 Phylogenetic independent contrasts (PIC) analysis was performed to investigate the correlation in hind and forewing shape evolution. R-squared values were then found by creating a linear model.
