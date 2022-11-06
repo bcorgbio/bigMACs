@@ -5,26 +5,143 @@ date: "2022-11-06"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+### Introduction
+
+
+###Methods
+
+```{r, echo= FALSE, include= FALSE}
+library(tidyverse)
+library(Momocs)
+library(vroom)
+
+f <- list.files("class_out_data",pattern=".txt|.csv",full.names = TRUE)
+#all .txt files in "lep_examples" folder
+#saves file path to 'f'
+
+out <- read_delim(f[1],delim="\t") %>% 
+  as.matrix()
+#Use delim = "\t" because fiji uses tab-delimited 
+#save first item as a matrix 
+
+out %>% 
+  list() %>% 
+  Out() %>% 
+  coo_flipx()
+#transformmatrix into a momocs outline. 
+#list() to convert object into a list, since a list of matrices is preferred by the Out() function
+#coo_flipx() flips the outline about the x-axis since the origin is in the top left
+#stack used to visualize outline
+
+#make a large df with vroom, no longer using a loop since some files are csv, some tab separated (FIJI)
+out.df <- vroom::vroom(f, id = "filename")
+
+#make list
+outs.l <- sapply(f,function(x) out.df %>% filter(filename==x) %>% select(X,Y) %>% as.matrix)
+
+outs.l %>% 
+  Out() %>% 
+  coo_flipx()
+
+
+#make a large df with vroom
+out.df <- vroom::vroom(f, id = "filename") %>% 
+  mutate(wing=gsub("XY_.+_(hindwing|forewing)\\..+","\\1",basename(filename))) %>% 
+  na.omit()
+
+#make list
+outs.l <- sapply(f,function(x) out.df %>% filter(filename==x) %>% select(X,Y) %>% as.matrix)
+
+#extract wing info
+wings <- gsub("XY_.+_(hindwing|forewing)\\..+","\\1",basename(names(outs.l)))
+
+
+outs <-  outs.l %>% 
+  Out(fac=list(wing=wings)) %>% 
+  coo_flipx()
+#pipes the list of matrices into Our() function, flip, and visualize with stack
+
+
+forewings <- outs %>% 
+  filter(wing=="forewing")
+
+hindwings <- outs %>% 
+  filter(wing=="hindwing")
+
+#assign outline with forewing to forewings and hindwing to hindwings
+#there are now two lists of outlines to analyze
+
+#fixing size:
+fore.min <- forewings %>% 
+  coo_nb() %>% 
+  min()
+#coo_nb returns the number of coordinates
+#minimize info loss with min()
+#assigns fore.min the mininum number of coordinates across forewings
+
+forewings %>%
+  coo_interpolate(fore.min) %>% 
+  fgProcrustes()
+#coo_interpolate extracts number of points at equal intervals
+#fgProcrustes minimizes distance between points in each outline to a universal size
+
+#do the same for hindwings
+hind.min <- hindwings %>% 
+  coo_nb() %>% 
+  min()
+
+hindwings %>% 
+  coo_interpolate(hind.min) %>% 
+  coo_slide(id=1) %>% 
+  coo_align()  %>%
+  fgProcrustes()
+
+#EFA
+#same code as above, but pipe the transformed outlines to efourier()
+#norm=FALSE is used so we align shapes before efourier step, some rotated morpho spaces
+forewings %>%
+  coo_interpolate(fore.min) %>% 
+  coo_align()  %>%
+  fgProcrustes() %>% 
+  efourier(norm=FALSE) 
+
+hindwings %>% 
+  coo_interpolate(hind.min) %>% 
+  coo_align()  %>%
+  fgProcrustes() %>% 
+  efourier(norm=FALSE) 
+
+forewing.pca <- forewings %>%
+  coo_interpolate(fore.min) %>%
+  coo_align()  %>%
+  coo_slide(id=1) %>% 
+  fgProcrustes() %>% 
+  efourier(norm=FALSE) %>% 
+  PCA()
+
+hindwing.pca <-hindwings %>% 
+  coo_interpolate(hind.min) %>% 
+  coo_align()  %>%
+  coo_slide(id=1) %>% 
+  fgProcrustes() %>% 
+  efourier(norm=FALSE) %>% 
+  PCA()
+
 ```
 
-## R Markdown
+```{r, echo= FALSE, message= FALSE}
+forewing.pca %>% 
+  plot_PCA(title = "forewings")
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+hindwing.pca %>% 
+  plot_PCA(title = "hindwings")
 ```
 
-## Including Plots
+### Results
 
-You can also embed plots, for example:
+### Discussion
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+### Contributions
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+### References
+
