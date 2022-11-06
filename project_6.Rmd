@@ -3,9 +3,13 @@ title: "Project6"
 author: "bigMACs"
 date: "2022-11-06"
 output: html_document
+bibliogprahy: Bib_6.bib
+
 ---
 
 ### Introduction
+Lepidopteras play valuable roles in the terrestrial ecosystems of the word. They are an order of insects cosnsisting of 160,000 species of butterflies and moths. They have both forewings and hindwings, each playing roles in functions such as flying and attracting mates. Even when their hindwing is cut off, reducing the surface area of their wing by one half, they are able to keep flying. However, with this loss of wing, the ability for linear flight and acceleration is severely weakened (@jantzen2008hindwings). Hindwings are essential in survival, enabling normal flight function and allowing lepidopterans to evade and defend against predators such as bats and birds. The size variation in the forewings and hindwings has allowed the lepidoptera to obtain high levels of flight and speed as well as directional inconsistnacy, which have evolved to pritotize these functions. The purpose of this study is to determine if the rates of wing-shape evolution between the hindwing and forweing are similar and if they have undergone significant shifts among lineages. Furthermore, we wanted to discover if these hindwing and forewing shapes were correlated with each other. The wings will be evaluated and compared through the phylogenetic analysis of over 200 species of Lepidoptera in a certain taxa. ​​
+
 
 
 ### Methods
@@ -176,4 +180,6 @@ forewing.pca2 <-  tibble(xy.file=basename(rownames(forewing.pca$x)),PC1=forewing
 ### Contributions
 
 ### References
+
+
 
