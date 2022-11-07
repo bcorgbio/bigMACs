@@ -127,7 +127,7 @@ hindwing.pca <-hindwings %>%
 ```
 
 ### Introduction
-Lepidopteras play valuable roles in the terrestrial ecosystems of the word. They are an order of insects cosnsisting of 160,000 species of butterflies and moths. They have both forewings and hindwings, each playing roles in functions such as flying and attracting mates. Even when their hindwing is cut off, reducing the surface area of their wing by one half, they are able to keep flying. However, with this loss of wing, the ability for linear flight and acceleration is severely weakened (@jantzen2008hindwings). Hindwings are essential in survival, enabling normal flight function and allowing lepidopterans to evade and defend against predators such as bats and birds. The size variation in the forewings and hindwings has allowed the lepidoptera to obtain high levels of flight and speed as well as directional inconsistnacy, which have evolved to pritotize these functions. The purpose of this study is to determine if the rates of wing-shape evolution between the hindwing and forweing are similar and if they have undergone significant shifts among lineages. Furthermore, we wanted to discover if these hindwing and forewing shapes were correlated with each other. The wings will be evaluated and compared through the phylogenetic analysis of over 200 species of Lepidoptera in a certain taxa. ​​
+Lepidopteras play valuable roles in the terrestrial ecosystems of the word. They are an order of insects cosnsisting of 160,000 species of butterflies and moths. They have both forewings and hindwings, each playing roles in functions such as flying and attracting mates. Even when their hindwing is cut off, reducing the surface area of their wing by one half, they are able to keep flying. However, with this loss of wing, the ability for linear flight and acceleration is severely weakened [@jantzen2008hindwings]. Hindwings are essential in survival, enabling normal flight function and allowing lepidopterans to evade and defend against predators such as bats and birds. The size variation in the forewings and hindwings has allowed the lepidoptera to obtain high levels of flight and speed as well as directional inconsistnacy, which have evolved to pritotize these functions. The purpose of this study is to determine if the rates of wing-shape evolution between the hindwing and forweing are similar and if they have undergone significant shifts among lineages. Furthermore, we wanted to discover if these hindwing and forewing shapes were correlated with each other. The wings will be evaluated and compared through the phylogenetic analysis of over 200 species of Lepidoptera in a certain taxa. ​​
 
 
 ### Methods
@@ -139,7 +139,7 @@ Right-wing shapes across ~200 species of Lepidoptera were examined utilizing the
 
 #### Shape & Comparative Analysis
 Outline-based shape analysis, utilizing Elliptical Fourier Analysis (EFA) and Principal Components Analysis (PCA), were performed to compare shape change between species. 
-PCA plot output for both forewing and hindwing can be referenced below (Figures 1 & 2). Evolutionary rates of the PC scores were observed across the Lepidoptera tree (@kawahara2019phylogenomics) and species information was added (Figure 3). 
+PCA plot output for both forewing and hindwing can be referenced below (Figures 1 & 2). Evolutionary rates of the PC scores were observed across the Lepidoptera tree [@kawahara2019phylogenomics] and species information was added (Figure 3). 
 
 ```{r, echo= FALSE, message= FALSE, fig.cap= "Figure 1: Biplot visualization of PCA 1 and 2 in the forewings"}
 forewing.pca %>% 
@@ -165,7 +165,7 @@ plot(main = "Lepidoptera Phylogenetics Tree", lep.tree,cex=0.1)
 ```
 
 #### Evolutionary Rates & Shifts
-The “non-censored test” (@o2006testing) was utilized to estimate the rates of morphological evolution over a phylogenetic tree. Phylogenetic ridge regression (@kratsch2014ridgerace) was then utilized to determine whether the evolutionary shift was to a slower or faster rate. The regressions are based on the phenotype values at each node vs. time between nodes and along the path. The value of the slope parameter of these regressions is the rate.
+The “non-censored test” [@o2006testing] was utilized to estimate the rates of morphological evolution over a phylogenetic tree. Phylogenetic ridge regression [@kratsch2014ridgerace] was then utilized to determine whether the evolutionary shift was to a slower or faster rate. The regressions are based on the phenotype values at each node vs. time between nodes and along the path. The value of the slope parameter of these regressions is the rate.
 
 #### Shape Evolution Correlation
 Phylogenetic independent contrasts (PIC) analysis was performed to investigate the correlation in hind and forewing shape evolution. R-squared values were then found by creating a linear model.
@@ -307,6 +307,9 @@ hindPC1.BM$sig2.single
 hindPC2.BM$sig2.single
 ```
 
+The evolutionary rates of the forewing and hindwing are quite different. The hindwing seems to evolve at a rate almost twice as fast as the forewing. The PC1 rates show the forewing to be undergoing evolutionary shifts at a rate of 0.006535527 versus the rate of 0.01014157 in the hindwing. This suggests the hindwing changes are occuring much more frequently in size and shape to promote advantageous factors in the Lepodoptra.The PC2 as well shows a large increase in evolutionary rates in the hindwing. 
+
+
 <br>
 
 #### Shifts in Evolutionary Rates
@@ -390,6 +393,7 @@ plot_SS <- function(tre=NULL,SS=NULL,tax=NULL){
 tax.names <- readRDS("Lep_classification.RDS")
 ```
 
+
 ##### Hindwing PC1
 
 ```{r, echo=FALSE, message=FALSE, fig.cap= "Figure 4: Visualization of evolutionary rate shift in the hindwings' PC1. Blue and downwards arrow indiactes a significant low rate shift. The table below shows the rate difference compared to the rest of the tree and the significance of the difference"}
@@ -421,6 +425,8 @@ forePC2.res <- plot_SS(lep.tree2,forePC2.SS,tax = tax.names)
 forePC2.res$plot
 forePC2.res$res
 ```
+
+Figures 4-7 depict the evolutionary shift rate in hindwings and forewings. The p-value of PC1 and PC2 are .001, telling us the difference in evolutionary rate between the labeled phyla and the rest of the tree is significant. The PC1 data for both forewing and hindwing show there has been an exceptional downward rate shift in a certain crown group on the phylogenetic tree. The blue triangle pointed down represents that the Macroheterocera: Noctuoidea group has undergone a low evolutionary shift in terms of aspect ratio (PC1) of the hindwing, and wing lobe deveopment (PC2) of the forewing. The crown-Obtectomera: Papilionoidea has undergone a low evolutionary shift as well for both lobe development (hindwing PC2), and aspect ratio (forewing PC2). Lowered rates of evolution can indicate conservation of existing traits, selecting against mutations that would otherwise change the phenotype and cause evolution. 
 
 <br>
 <br>
