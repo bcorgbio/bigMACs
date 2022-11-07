@@ -460,12 +460,12 @@ The results from the plot is supported by linear model above. The negative relat
 PC.pic %>% 
   ggplot(aes(x=fore2,y=hind1))+geom_point()+geom_smooth(method="lm")
 ```
-Unlike that from Figure 8, the relationship between hindwing PC1 and forewing PC2 is not as clear and distinct.
+In contrast with Figure 8, the positive relationship between hindwing PC1 and forewing PC2 is not as clear and significant.
 
 ```{r, message= FALSE, echo= FALSE}
 summary(lm(hind1~fore2,PC.pic))
 ```
-As expected from Figure 9, the correlation is weak and insignificant at any alpha level. An extremely large amount of variace in the hindwings' PC1 is not explained as indicated by the low R-squared values.
+As expected from Figure 9, the correlation is weak and insignificant at any alpha level. An extremely large amount of variance in the hindwings' PC1 is not explained by forewing PC2, as indicated by the low R-squared values.
 
 ```{r, message= FALSE, echo=FALSE}
 summary(lm(hind1~fore1 + fore2,PC.pic))
@@ -475,27 +475,38 @@ The two linear models above summarize the effects of PC1 and PC2 of the forewing
 
 ##### Predictors of hindwing PC2
 
-```{r, message= FALSE, echo= FALSE}
+```{r, message= FALSE, echo= FALSE, fig.cap= "Figure 10: Linear regression plot of the dependent variable, hindwing PC2, against the independent variable, forewing PC2" }
 PC.pic %>% 
   ggplot(aes(x=fore2,y=hind2))+geom_point()+geom_smooth(method="lm")
-
 summary(lm(hind2~fore2,PC.pic))
-summary(lm(hind2~fore2 + fore1,PC.pic))
-summary(lm(hind2~fore2*fore1,PC.pic))
+```
+The linear model visualized in Figure 10 indicate that PC2 of the forewing is not a statistically significant predictor of PC2 of the hindwing. The slope coefficient is also relatively weak.
 
+```{r, message= FALSE, echo= FALSE, fig.cap= "Figure 11: Linear regression plot of the dependent variable, hindwing PC2, against the independent variable, forewing PC1" }
 PC.pic %>% 
   ggplot(aes(x=fore1,y=hind2))+geom_point()+geom_smooth(method="lm")
-
+summary(lm(hind2~fore1,PC.pic))
 ```
+According to Figure 11, forewing PC1 appears to be a slightly better predictor of hindwing PC2. The linear model shows that the positive relationship is statistically significant at the 5 percent level. 
+
+```{r, message= FALSE, echo= FALSE}
+summary(lm(hind2~fore2 + fore1,PC.pic))
+summary(lm(hind2~fore2*fore1,PC.pic))
+```
+In a multivariate context, the relationships of forewing PC1 and PC2 with hindwing PC2 do not change. There also is no significant interaction.
+As a summary, there is a very strong and significant negative relationship between hindwing PC1 and forewing PC1. There is also a relatively significant positive relationship between hindwing PC2 and forewing PC1. The shape of the hingwing is therefore correlated with the shape of the forewing to a certain extent.
 
 
 ### Discussion
 
 ### Contributions
-Jack: Methods + Intro + bib
-John: Intro + Results + bib
-Philip: Markdown File + Graphs + Code
-Samantha: Discussion
+*Jack: Introduction, methods, and bibliography
+
+*John: Introduction, results, and bibliography
+
+*Philip: Markdown file formatting, R-script coding, results
+
+*Samantha: Discussion
 
 ### References
 
