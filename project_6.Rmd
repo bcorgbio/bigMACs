@@ -287,16 +287,31 @@ forePC2.BM<-brownie.lite(lep.tree2,fore.pc2*10)
 hindPC2.BM<-brownie.lite(lep.tree2,hind.pc2*10)
 ```
 
+##### Evolution Rate Estimate of PC1 in Forewing
 ```{r, echo= FALSE}
 forePC1.BM$sig2.single
+```
+
+##### Evolution Rate Estimate of PC2 in Forewing
+```{r, echo= FALSE}
 forePC2.BM$sig2.single
+```
+
+##### Evolution Rate Estimate of PC1 in Hindwing
+```{r, echo= FALSE}
 hindPC1.BM$sig2.single
+```
+
+##### Evolution Rate Estimate of PC2 in Hindwing
+```{r, echo= FALSE}
 hindPC2.BM$sig2.single
 ```
 
+<br>
+
 #### Shifts in Evolutionary Rates
 
-```{r, echo= FALSE, message= FALSE}
+```{r, echo= FALSE, message= FALSE, include= FALSE}
 library(RRphylo)
 library(ggtree)
 library(wesanderson)
@@ -377,7 +392,7 @@ tax.names <- readRDS("Lep_classification.RDS")
 
 ##### Hindwing PC1
 
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=FALSE, message=FALSE, fig.cap= "Figure 4: Visualization of evolutionary rate shift in the hindwings' PC1. Blue and downwards arrow indiactes a significant low rate shift. The table below shows the rate difference compared to the rest of the tree and the significance of the difference"}
 hindPC1.res <- plot_SS(lep.tree2,hindPC1.SS,tax = tax.names)
 hindPC1.res$plot
 hindPC1.res$res
@@ -385,28 +400,30 @@ hindPC1.res$res
 
 ##### Hindwing PC2
 
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=FALSE, message=FALSE, fig.cap= "Figure 5: Visualization of evolutionary rate shift in the hindwings' PC2. Blue and downwards arrow indiactes a significant low rate shift. The table below shows the rate difference compared to the rest of the tree and the significance of the difference"}
 hindPC2.res <- plot_SS(lep.tree2,hindPC2.SS,tax = tax.names)
 hindPC2.res$plot
 hindPC2.res$res
 ```
 
-#### Forewing PC1
+##### Forewing PC1
 
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=FALSE, message=FALSE, fig.cap= "Figure 6: Visualization of evolutionary rate shift in the forewings' PC1. Blue and downwards arrow indiactes a significant low rate shift. The table below shows the rate difference compared to the rest of the tree and the significance of the difference" }
 forePC1.res <- plot_SS(lep.tree2,forePC1.SS,tax = tax.names)
 forePC1.res$plot
 forePC1.res$res
 ```
 
-#### Forewing PC2
+##### Forewing PC2
 
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=FALSE, message=FALSE, fig.cap= "Figure 7: Visualization of evolutionary rate shift in the forewings' PC2. Blue and downwards arrow indiactes a significant low rate shift. The table below shows the rate difference compared to the rest of the tree and the significance of the difference"}
 forePC2.res <- plot_SS(lep.tree2,forePC2.SS,tax = tax.names)
 forePC2.res$plot
 forePC2.res$res
 ```
 
+<br>
+<br>
 
 #### Shape Evolution Correlation
 
