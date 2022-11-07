@@ -1,4 +1,3 @@
-
 ---
 title: "Project6"
 author: "bigMACs"
@@ -307,7 +306,6 @@ hindPC1.BM$sig2.single
 ```{r, echo= FALSE}
 hindPC2.BM$sig2.single
 ```
-The evolutionary rates of the forewing and hindwing are quite different. The hindwing seems to evolve at a rate almost twice as fast as the forewing. The PC1 rates show the forewing to be undergoing evolutionary shifts at a rate of 0.006535527 versus the rate of 0.01014157 in the hindwing. This suggests the hindwing changes are occuring much more frequently in size and shape to promote advantageous factors in the Lepodoptra.The PC2 as well shows a large increase in evolutionary rates in the hindwing. 
 
 <br>
 
@@ -421,11 +419,8 @@ forePC1.res$res
 ```{r, echo=FALSE, message=FALSE, fig.cap= "Figure 7: Visualization of evolutionary rate shift in the forewings' PC2. Blue and downwards arrow indiactes a significant low rate shift. The table below shows the rate difference compared to the rest of the tree and the significance of the difference"}
 forePC2.res <- plot_SS(lep.tree2,forePC2.SS,tax = tax.names)
 forePC2.res$plot
-forePC2.res$res 
+forePC2.res$res
 ```
-Figures 4-7 depict the evolutionary shift rate in hindwings and forewings. The p-value of PC1 and PC2 are .001, telling us the difference in evolutionary rate between the labeled phyla and the rest of the tree is significant. The PC1 data for both forewing and hindwing show there has been an exceptional downward rate shift in a certain crown group on the phylogenetic tree. The blue triangle pointed down represents that the Macroheterocera: Noctuoidea group has undergone a low evolutionary shift in terms of aspect ratio (PC1) of the hindwing, and wing lobe deveopment (PC2) of the forewing. The crown-Obtectomera: Papilionoidea has undergone a low evolutionary shift as well for both lobe development (hindwing PC2), and aspect ratio (forewing PC2). Lowered rates of evolution can indicate conservation of existing traits, selecting against mutations that would otherwise change the phenotype and cause evolution. 
-
-
 
 <br>
 <br>
@@ -503,6 +498,9 @@ As a summary, there is a very strong and significant negative relationship betwe
 
 
 ### Discussion
+The Lepidoptera species use a set of wings, a forewing and hindwing for a plethora of survival functions such as movement, reproduction, and eating as well. These pairs of wings provide flight to all of these functions, and without them the species would not be able to transport themselves where necessary to survive. Like many species, their parts, such as these forewings and hindwings have evolved. 
+	The Papilionoidea group showed a lack of variation in wing size, shown in the results of the PC2. This indicates that there is a conservation of wing size among this group. PC1 and PC2 were transformed into phylogenetic information, and it was found that PC2 did not carry significance, with an R-squared value of 0.4442. It was also found that PC1 did carry significance with an R-squared value of 0.4121. 
+	There are many different reasons for evolutionary changes in wing shapes, such as varying competition levels in the ecology, or constraints due to the environment. Groups of species that live among many different species, especially predators, may experience low aspect ratio, whereas groups who are migrating frequently for varying reasons may have high aspect ratio. 
 
 ### Contributions
 *Jack: Introduction, methods, and bibliography
@@ -514,6 +512,5 @@ As a summary, there is a very strong and significant negative relationship betwe
 *Samantha: Discussion
 
 ### References
-
 
 
