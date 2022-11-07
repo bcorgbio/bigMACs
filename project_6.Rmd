@@ -427,6 +427,8 @@ forePC2.res$res
 
 #### Shape Evolution Correlation
 
+##### Predictors of hindwing PC1
+
 ```{r, include=FALSE}
 hindPC1.pic <- pic(hind.pc1,phy = lep.tree2)
 hindPC2.pic <- pic(hind.pc2,phy = lep.tree2)
@@ -434,7 +436,7 @@ forePC1.pic <- pic(fore.pc1,phy = lep.tree2)
 forePC2.pic <- pic(fore.pc2, phy= lep.tree2)
 ```
 
-```{r, message= FALSE, echo= FALSE}
+```{r, message= FALSE, echo= FALSE, fig.cap= "Figure 8: Linear regression plot of the dependent variable, hindwing PC1, against the independent variable, forewing PC1"}
 PC.pic <- tibble(
   hind1=hindPC1.pic,
   fore1=forePC1.pic,
@@ -444,13 +446,34 @@ PC.pic <- tibble(
 
 PC.pic %>% 
   ggplot(aes(x=fore1,y=hind1))+geom_point()+geom_smooth(method="lm")
-summary(lm(hind1~fore1,PC.pic))
+```
+The linear regression plot indicates a strong, negative correlation between PC1 of forewing and hindwing. 
 
+```{r, message= FALSE, echo= FALSE}
+summary(lm(hind1~fore1,PC.pic))
+```
+The results from the plot is supported by linear model above. The negative relationship is statistically significant at near 0% level, with a t-value of -11.562. The adjusted R-squared value of 0.4442 also indicates a single variable in PC1 of the forewing is enough to account for a significant amount of variance in the PC1 of the hindwing. 
+
+<br>
+
+```{r, message= FALSE, echo= FALSE, fig.cap= "Figure 9: Linear regression plot of the dependent variable, hindwing PC1, against the independent variable, forewing PC2"}
+PC.pic %>% 
+  ggplot(aes(x=fore2,y=hind1))+geom_point()+geom_smooth(method="lm")
+```
+Unlike that from Figure 8, the relationship between hindwing PC1 and forewing PC2 is not as clear and distinct.
+
+```{r, message= FALSE, echo= FALSE}
+summary(lm(hind1~fore2,PC.pic))
+```
+As expected from Figure 9, the correlation is weak and insignificant at any alpha level. An extremely large amount of variace in the hindwings' PC1 is not explained as indicated by the low R-squared values.
+
+```{r, message= FALSE, echo=FALSE}
 summary(lm(hind1~fore1 + fore2,PC.pic))
 summary(lm(hind1~fore1*fore2,PC.pic))
-
 ```
+The two linear models above summarize the effects of PC1 and PC2 of the forewing on PC1 of the hindwing in a multivariate context. In both cases, forewing PC1 maintained its statistical significance and forewing PC2 maintained its insignificance. The low t-value of the interaction term also suggest that PC1 and PC2 of the forewing do not influence each others' effects on hindwing PC1. Since there is also no significant change in the R-squared values from that in Figure 8, the linear model with only forewing PC1 would be the best and most straightforward predictor for hindwing PC1.
 
+##### Predictors of hindwing PC2
 
 ```{r, message= FALSE, echo= FALSE}
 PC.pic %>% 
