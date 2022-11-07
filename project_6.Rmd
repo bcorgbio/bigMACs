@@ -423,7 +423,7 @@ forePC2.res <- plot_SS(lep.tree2,forePC2.SS,tax = tax.names)
 forePC2.res$plot
 forePC2.res$res 
 ```
-Figures 4-7 depict the evolutionary shift rate in hindwings and forewings. The p-value of PC1 and PC2 are .001 telling us there is high significance between the data points. The PC1 data for both forewing and hindwing show there has been an exceptional shift downward on the phylogentic tree.  The blue triangle pointed down represents that the Macroheterocera: Noctuoidea has undergone a low evolutionary shift. In PC2 data, the forewing and hindwing show an exceptional shift further up the phylogentic tree. The crown-Obtectomera: Papilionoidea has undergone a low evolutionary shift as well for both hindwing and forewing. 
+Figures 4-7 depict the evolutionary shift rate in hindwings and forewings. The p-value of PC1 and PC2 are .001, telling us the difference in evolutionary rate between the labeled phyla and the rest of the tree is significant. The PC1 data for both forewing and hindwing show there has been an exceptional downward rate shift in a certain crown group on the phylogenetic tree. The blue triangle pointed down represents that the Macroheterocera: Noctuoidea group has undergone a low evolutionary shift in terms of aspect ratio (PC1) of the hindwing, and wing lobe deveopment (PC2) of the forewing. The crown-Obtectomera: Papilionoidea has undergone a low evolutionary shift as well for both lobe development (hindwing PC2), and aspect ratio (forewing PC2). Lowered rates of evolution can indicate conservation of existing traits, selecting against mutations that would otherwise change the phenotype and cause evolution. 
 
 
 
