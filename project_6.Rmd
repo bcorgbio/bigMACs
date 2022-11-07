@@ -1,3 +1,4 @@
+
 ---
 title: "Project6"
 author: "bigMACs"
@@ -306,6 +307,7 @@ hindPC1.BM$sig2.single
 ```{r, echo= FALSE}
 hindPC2.BM$sig2.single
 ```
+The evolutionary rates of the forewing and hindwing are quite different. The hindwing seems to evolve at a rate almost twice as fast as the forewing. The PC1 rates show the forewing to be undergoing evolutionary shifts at a rate of 0.006535527 versus the rate of 0.01014157 in the hindwing. This suggests the hindwing changes are occuring much more frequently in size and shape to promote advantageous factors in the Lepodoptra.The PC2 as well shows a large increase in evolutionary rates in the hindwing. 
 
 <br>
 
@@ -419,8 +421,11 @@ forePC1.res$res
 ```{r, echo=FALSE, message=FALSE, fig.cap= "Figure 7: Visualization of evolutionary rate shift in the forewings' PC2. Blue and downwards arrow indiactes a significant low rate shift. The table below shows the rate difference compared to the rest of the tree and the significance of the difference"}
 forePC2.res <- plot_SS(lep.tree2,forePC2.SS,tax = tax.names)
 forePC2.res$plot
-forePC2.res$res
+forePC2.res$res 
 ```
+Figures 4-7 depict the evolutionary shift rate in hindwings and forewings. The p-value of PC1 and PC2 are .001 telling us there is high significance between the data points. The PC1 data for both forewing and hindwing show there has been an exceptional shift downward on the phylogentic tree.  The blue triangle pointed down represents that the Macroheterocera: Noctuoidea has undergone a low evolutionary shift. In PC2 data, the forewing and hindwing show an exceptional shift further up the phylogentic tree. The crown-Obtectomera: Papilionoidea has undergone a low evolutionary shift as well for both hindwing and forewing. 
+
+
 
 <br>
 <br>
