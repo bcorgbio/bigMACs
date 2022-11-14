@@ -1,0 +1,562 @@
+---
+title: "Project6"
+author: "bigMACs"
+date: "2022-11-06"
+output: html_document
+bibliography: references6.bib
+
+---
+
+```{r, echo= FALSE, include= FALSE}
+library(tidyverse)
+library(Momocs)
+library(vroom)
+
+f <- list.files("class_out_data",pattern=".txt|.csv",full.names = TRUE)
+#all .txt files in "lep_examples" folder
+#saves file path to 'f'
+
+out <- read_delim(f[1],delim="\t") %>% 
+  as.matrix()
+#Use delim = "\t" because fiji uses tab-delimited 
+#save first item as a matrix 
+
+out %>% 
+  list() %>% 
+  Out() %>% 
+  coo_flipx()
+#transformmatrix into a momocs outline. 
+#list() to convert object into a list, since a list of matrices is preferred by the Out() function
+#coo_flipx() flips the outline about the x-axis since the origin is in the top left
+#stack used to visualize outline
+
+#make a large df with vroom, no longer using a loop since some files are csv, some tab separated (FIJI)
+out.df <- vroom::vroom(f, id = "filename")
+
+#make list
+outs.l <- sapply(f,function(x) out.df %>% filter(filename==x) %>% select(X,Y) %>% as.matrix)
+
+outs.l %>% 
+  Out() %>% 
+  coo_flipx()
+
+
+#make a large df with vroom
+out.df <- vroom::vroom(f, id = "filename") %>% 
+  mutate(wing=gsub("XY_.+_(hindwing|forewing)\\..+","\\1",basename(filename))) %>% 
+  na.omit()
+
+#make list
+outs.l <- sapply(f,function(x) out.df %>% filter(filename==x) %>% select(X,Y) %>% as.matrix)
+
+#extract wing info
+wings <- gsub("XY_.+_(hindwing|forewing)\\..+","\\1",basename(names(outs.l)))
+
+
+outs <-  outs.l %>% 
+  Out(fac=list(wing=wings)) %>% 
+  coo_flipx()
+#pipes the list of matrices into Our() function, flip, and visualize with stack
+
+
+forewings <- outs %>% 
+  filter(wing=="forewing")
+
+hindwings <- outs %>% 
+  filter(wing=="hindwing")
+
+#assign outline with forewing to forewings and hindwing to hindwings
+#there are now two lists of outlines to analyze
+
+#fixing size:
+fore.min <- forewings %>% 
+  coo_nb() %>% 
+  min()
+#coo_nb returns the number of coordinates
+#minimize info loss with min()
+#assigns fore.min the mininum number of coordinates across forewings
+
+forewings %>%
+  coo_interpolate(fore.min) %>% 
+  fgProcrustes()
+#coo_interpolate extracts number of points at equal intervals
+#fgProcrustes minimizes distance between points in each outline to a universal size
+
+#do the same for hindwings
+hind.min <- hindwings %>% 
+  coo_nb() %>% 
+  min()
+
+hindwings %>% 
+  coo_interpolate(hind.min) %>% 
+  coo_slide(id=1) %>% 
+  coo_align()  %>%
+  fgProcrustes()
+
+#EFA
+#same code as above, but pipe the transformed outlines to efourier()
+#norm=FALSE is used so we align shapes before efourier step, some rotated morpho spaces
+forewings %>%
+  coo_interpolate(fore.min) %>% 
+  coo_align()  %>%
+  fgProcrustes() %>% 
+  efourier(norm=FALSE) 
+
+hindwings %>% 
+  coo_interpolate(hind.min) %>% 
+  coo_align()  %>%
+  fgProcrustes() %>% 
+  efourier(norm=FALSE) 
+
+forewing.pca <- forewings %>%
+  coo_interpolate(fore.min) %>%
+  coo_align()  %>%
+  coo_slide(id=1) %>% 
+  fgProcrustes() %>% 
+  efourier(norm=FALSE) %>% 
+  PCA()
+
+hindwing.pca <-hindwings %>% 
+  coo_interpolate(hind.min) %>% 
+  coo_align()  %>%
+  coo_slide(id=1) %>% 
+  fgProcrustes() %>% 
+  efourier(norm=FALSE) %>% 
+  PCA()
+
+```
+
+<!-- for comments -->
+<style>
+div.comment pre { background-color:#ffbbbb; }
+div.comment pre.r { background-color:#ffbbbb; }
+div.comment {color: red;}
+</style>
+
+### Introduction
+Lepidopteras play valuable roles in the terrestrial ecosystems of the word. They are an order of insects cosnsisting of 160,000 species of butterflies and moths. They have both forewings and hindwings, each playing roles in functions such as flying and attracting mates. Even when their hindwing is cut off, reducing the surface area of their wing by one half, they are able to keep flying. However, with this loss of wing, the ability for linear flight and acceleration is severely weakened (@jantzen2008hindwings). Hindwings are essential in survival, enabling normal flight function and allowing lepidopterans to evade and defend against predators such as bats and birds. The size variation in the forewings and hindwings has allowed the lepidoptera to obtain high levels of flight and speed as well as directional inconsistnacy, which have evolved to pritotize these functions. The purpose of this study is to determine if the rates of wing-shape evolution between the hindwing and forweing are similar and if they have undergone significant shifts among lineages. Furthermore, we wanted to discover if these hindwing and forewing shapes were correlated with each other. The wings will be evaluated and compared through the phylogenetic analysis of over 200 species of Lepidoptera in a certain taxa. 
+
+
+### Methods
+#### Image Acquisition 
+Images analyzed in this project were acquired by downloading the R package, rgif, which permits access to the Global Biodiversity Information Facility’s (GBIF) application programming interface. Records from GBIF were now accessible for all Lepidoptera analyzed below. 
+
+#### Digitization
+Right-wing shapes across ~200 species of Lepidoptera were examined utilizing the image analysis program FIJI. After opening each image, the following sequence was followed depending on scale bar, wing damage, and hindwing exposure. If a scale bar was present, the scale was set in mm. If the right-wing pair was damaged, the image was flipped horizontally. The wings were then traced utilizing the polygon selection tool. A script was created, and the selected points (x and y coordinates) were exported in a .txt file for further analysis.
+
+#### Shape & Comparative Analysis
+Outline-based shape analysis, utilizing Elliptical Fourier Analysis (EFA) and Principal Components Analysis (PCA), were performed to compare shape change between species. 
+PCA plot output for both forewing and hindwing can be referenced below (Figures 1 & 2). Evolutionary rates of the PC scores were observed across the Lepidoptera tree (@kawahara2019phylogenomics) and species information was added (Figure 3). 
+
+```{r, echo= FALSE, message= FALSE, fig.cap= "Figure 1: Biplot visualization of PCA 1 and 2 in the forewings"}
+forewing.pca %>% 
+  plot_PCA(title = "Forewings")
+
+
+```
+
+```{r, echo= FALSE, message= FALSE, fig.cap= "Figure 2: Biplot visualization of PCA 1 and 2 in the hindwings"}
+hindwing.pca %>% 
+  plot_PCA(title = "Hindwings")
+
+```
+
+```{r, echo= FALSE, message= FALSE, fig.cap= "Figure 3: Phylogenetic tree based on @kawahara2019phylogenomics study on Lepidoptera. The same tree is modified to include only species observed in PC analysis and merged with PC data to visualize evolutionary rate shifts"}
+library(ape)
+
+lep.tree <- ape::read.tree("lep_tree2.tre") %>% ladderize()
+lep.tree$tip.label <- gsub("_"," ",lep.tree$tip.label)
+plot(main = "Lepidoptera Phylogenetics Tree", lep.tree,cex=0.1)
+
+
+```
+
+#### Evolutionary Rates & Shifts
+The “non-censored test” (@o2006testing) was utilized to estimate the rates of morphological evolution over a phylogenetic tree. Phylogenetic ridge regression (@kratsch2014ridgerace) was then utilized to determine whether the evolutionary shift was to a slower or faster rate. The regressions are based on the phenotype values at each node vs. time between nodes and along the path. The value of the slope parameter of these regressions is the rate.
+
+#### Shape Evolution Correlation
+Phylogenetic independent contrasts (PIC) analysis was performed to investigate the correlation in hind and forewing shape evolution. R-squared values were then found by creating a linear model.
+
+
+```{r, echo= FALSE, include= FALSE}
+#connect tree to shapes
+
+#but we do have a file of species names and identifier for their outline names
+lep.sp <- read_csv("lep_image_data.csv")
+#identifier in this case is the file name without the extention
+
+out.data <- tibble(xy.file=basename(names(outs))) %>% 
+  mutate(identifier=gsub("XY_|_hindwing|_forewing|.txt","",xy.file)) %>% 
+  left_join(lep.sp)
+#make a new tibble without outline names but identifier names using gsub()
+#then we merge the species name list to the outlines list using the common identifiers
+
+hindwing.pca2 <-  tibble(xy.file=basename(rownames(hindwing.pca$x)),PC1=hindwing.pca$x[,1],PC2=hindwing.pca$x[,2]) %>% 
+  left_join(out.data)
+forewing.pca2 <-  tibble(xy.file=basename(rownames(forewing.pca$x)),PC1=forewing.pca$x[,1],PC2=forewing.pca$x[,2])%>% 
+  left_join(out.data)
+```
+
+```{r, echo= FALSE, include= FALSE}
+drops <- lep.tree$tip.label[!lep.tree$tip.label%in%unique(out.data$species)]
+
+lep.tree2 <- drop.tip(lep.tree,drops)
+
+#establish PC1 and PC2 as vector of values
+#PC1s
+hind.pc1 <- hindwing.pca2 %>% 
+  filter(species%in% lep.tree2$tip.label) %>% 
+  group_by(species) %>% 
+  summarize(PC1=mean(PC1)) %>% 
+  pull
+
+names(hind.pc1) <-  hindwing.pca2%>% 
+  filter(species%in% lep.tree2$tip.label) %>% 
+  group_by(species) %>% 
+  summarize(PC1=mean(PC1)) %>% 
+  pull(species)
+
+fore.pc1 <- forewing.pca2 %>% 
+  filter(species%in% lep.tree2$tip.label) %>% 
+  group_by(species) %>% 
+  summarize(PC1=mean(PC1)) %>% 
+  pull(PC1)
+
+names(fore.pc1) <-  forewing.pca2 %>% 
+  filter(species%in% lep.tree2$tip.label) %>% 
+  group_by(species) %>% 
+  summarize(PC1=mean(PC1)) %>% 
+  pull(species)
+
+#PC2s
+hind.pc2 <- hindwing.pca2 %>% 
+  filter(species%in% lep.tree2$tip.label) %>% 
+  group_by(species) %>% 
+  summarize(PC2=mean(PC2)) %>% 
+  pull(PC2)
+
+names(hind.pc2) <-  hindwing.pca2%>% 
+  filter(species%in% lep.tree2$tip.label) %>% 
+  group_by(species) %>%
+  summarize(PC2=mean(PC2)) %>% 
+  pull(species)
+
+fore.pc2 <- forewing.pca2 %>% 
+  filter(species%in% lep.tree2$tip.label) %>% 
+  group_by(species) %>% 
+  summarize(PC2=mean(PC2)) %>% 
+  pull(PC2)
+
+names(fore.pc2) <-  forewing.pca2 %>% 
+  filter(species%in% lep.tree2$tip.label) %>% 
+  group_by(species) %>% 
+  summarize(PC2=mean(PC2)) %>% 
+  pull(species)
+
+#PC2s
+hind.pc2 <- hindwing.pca2 %>% 
+  filter(species%in% lep.tree2$tip.label) %>% 
+  group_by(species) %>% 
+  summarize(PC2=mean(PC2)) %>% 
+  pull(PC2)
+
+names(hind.pc2) <-  hindwing.pca2%>% 
+  filter(species%in% lep.tree2$tip.label) %>% 
+  group_by(species) %>%
+  summarize(PC2=mean(PC2)) %>% 
+  pull(species)
+
+fore.pc2 <- forewing.pca2 %>% 
+  filter(species%in% lep.tree2$tip.label) %>% 
+  group_by(species) %>% 
+  summarize(PC2=mean(PC2)) %>% 
+  pull(PC2)
+
+names(fore.pc2) <-  forewing.pca2 %>% 
+  filter(species%in% lep.tree2$tip.label) %>% 
+  group_by(species) %>% 
+  summarize(PC2=mean(PC2)) %>% 
+  pull(species)
+#filtered by species that are only in our new tree
+```
+
+
+### Results
+
+<div class="comment">
+The figures above are results (minus the tree) and should go in this section. That is, describe the methods in the "methods" section and report the results with graphics and a narrative here.
+```{r}
+grade <-75
+
+grade <- grade-2
+```
+</div>
+
+#### Evolutionary Rates: Hindwing vs. Forewing
+
+```{r, message= FALSE, include= FALSE}
+library(phytools)
+forePC1.BM<-brownie.lite(lep.tree2,fore.pc1*10)
+hindPC1.BM<-brownie.lite(lep.tree2,hind.pc1*10)
+
+forePC2.BM<-brownie.lite(lep.tree2,fore.pc2*10)
+hindPC2.BM<-brownie.lite(lep.tree2,hind.pc2*10)
+```
+
+##### Evolution Rate Estimate of PC1 in Forewing
+```{r, echo= FALSE}
+forePC1.BM$sig2.single
+```
+
+##### Evolution Rate Estimate of PC2 in Forewing
+```{r, echo= FALSE}
+forePC2.BM$sig2.single
+```
+
+##### Evolution Rate Estimate of PC1 in Hindwing
+```{r, echo= FALSE}
+hindPC1.BM$sig2.single
+```
+
+##### Evolution Rate Estimate of PC2 in Hindwing
+```{r, echo= FALSE}
+hindPC2.BM$sig2.single
+```
+
+<br>
+
+<div class="comment">
+We need some text here, not just the rate numbers printed out.
+```{r}
+grade <-75
+
+grade <- grade-2
+```
+</div>
+
+
+#### Shifts in Evolutionary Rates
+
+```{r, echo= FALSE, message= FALSE, include= FALSE}
+library(RRphylo)
+library(ggtree)
+library(wesanderson)
+
+hindPC1.RR <- RRphylo(tree=lep.tree2,y=hind.pc1)
+hindPC2.RR <- RRphylo(tree=lep.tree2,y=hind.pc2)
+
+forePC1.RR <- RRphylo(tree=lep.tree2,y=fore.pc1)
+forePC2.RR <- RRphylo(tree=lep.tree2,y=hind.pc2)
+
+hindPC1.SS<- search.shift(RR=hindPC1.RR,status.type="clade")
+hindPC1.SS$single.clades
+hindPC2.SS<- search.shift(RR=hindPC2.RR,status.type="clade")
+hindPC2.SS$single.clades
+
+forePC1.SS<- search.shift(RR=forePC1.RR,status.type="clade")
+forePC1.SS$single.clades
+forePC2.SS<- search.shift(RR=forePC2.RR,status.type="clade")
+forePC2.SS$single.clades
+```
+
+```{r, echo= FALSE, message= FALSE}
+plot_SS <- function(tre=NULL,SS=NULL,tax=NULL){
+  
+
+  nodes <- as.numeric(rownames(SS$single.clades))
+  
+  pal <- wes_palette("Zissou1",n=length(nodes))
+  sp <- list()
+  for(i in nodes){
+    sp.i <- extract.clade(tre,i)$tip.label
+    
+    #print(head(tax))
+    sub.names <- lapply(tax,function(x) x[x%in%sp.i]) 
+    
+    in.clades <- lapply(sub.names,function(x) length(x)>0) 
+    all.of.clade <- lapply(sub.names,function(x) all(sapply(sp.i,function(z) z%in%x))) 
+    
+    high.clade <- names(sub.names)[last(which(all.of.clade==T))]
+    all.clades <- names(sub.names)[which(in.clades==T)]
+    crown <- ""
+    if(high.clade!=last(names(sub.names))) crown <- "crown-"
+    
+    sub.clades <- NULL
+    if(length(grepl("oidea",all.clades))>0) sub.clades <- all.clades[grepl("oidea",all.clades)]
+
+    high.clade2 <- paste0(crown,high.clade,": ",paste0(sub.clades,collapse = "+"))
+    sp[[paste0(i)]] <- tibble(n=i,species=sp.i,clade=high.clade2)
+    
+  }
+
+  
+  d <- do.call(rbind,sp)%>% 
+    rename(label=species) 
+  
+  d2<- d %>% rename(clade_name=clade) 
+  
+  p <- ggtree(tre)+ scale_y_reverse()
+  
+  p$data <- p$data %>% left_join(d) %>% left_join(tibble(node=nodes,SS$single.clades) %>% mutate(shift=ifelse(rate.difference>0,"+","-")))
+  
+  p <-  p+geom_tiplab(aes(col=clade),geom="text",size=1.2)+
+    geom_cladelab(data=d2,mapping=aes(node=n,col=clade_name,label=clade_name),offset=1,size=1.5)+
+    geom_hilight(data=d2,mapping = aes(node = n,fill=clade_name),alpha = 0.01)+
+    scale_fill_manual(values = pal)+
+    scale_color_manual(values = pal)+
+    theme(legend.position = "none")+geom_nodepoint(mapping=aes(subset = shift =="-"), size=5, shape=25,fill='blue',color='blue',alpha=0.7)+
+    geom_nodepoint(mapping=aes(subset = shift =="+"), size=5, shape=24, fill='red',color='red',alpha=0.7)
+  p <- p+xlim(NA,6)
+  res <- tibble(n=nodes,SS$single.clades) %>% left_join(d %>% select(n,clade) %>% unique)
+  
+  return(list(plot=p,res=res))
+  
+}
+
+tax.names <- readRDS("Lep_classification.RDS")
+```
+
+##### Hindwing PC1
+
+```{r, echo=FALSE, message=FALSE, fig.cap= "Figure 4: Visualization of evolutionary rate shift in the hindwings' PC1. Blue and downwards arrow indiactes a significant low rate shift. The table below shows the rate difference compared to the rest of the tree and the significance of the difference"}
+hindPC1.res <- plot_SS(lep.tree2,hindPC1.SS,tax = tax.names)
+hindPC1.res$plot
+hindPC1.res$res
+```
+
+##### Hindwing PC2
+
+```{r, echo=FALSE, message=FALSE, fig.cap= "Figure 5: Visualization of evolutionary rate shift in the hindwings' PC2. Blue and downwards arrow indiactes a significant low rate shift. The table below shows the rate difference compared to the rest of the tree and the significance of the difference"}
+hindPC2.res <- plot_SS(lep.tree2,hindPC2.SS,tax = tax.names)
+hindPC2.res$plot
+hindPC2.res$res
+```
+
+##### Forewing PC1
+
+```{r, echo=FALSE, message=FALSE, fig.cap= "Figure 6: Visualization of evolutionary rate shift in the forewings' PC1. Blue and downwards arrow indiactes a significant low rate shift. The table below shows the rate difference compared to the rest of the tree and the significance of the difference" }
+forePC1.res <- plot_SS(lep.tree2,forePC1.SS,tax = tax.names)
+forePC1.res$plot
+forePC1.res$res
+```
+
+##### Forewing PC2
+
+```{r, echo=FALSE, message=FALSE, fig.cap= "Figure 7: Visualization of evolutionary rate shift in the forewings' PC2. Blue and downwards arrow indiactes a significant low rate shift. The table below shows the rate difference compared to the rest of the tree and the significance of the difference"}
+forePC2.res <- plot_SS(lep.tree2,forePC2.SS,tax = tax.names)
+forePC2.res$plot
+forePC2.res$res
+```
+
+<br>
+<br>
+
+#### Shape Evolution Correlation
+
+##### Predictors of hindwing PC1
+
+```{r, include=FALSE}
+hindPC1.pic <- pic(hind.pc1,phy = lep.tree2)
+hindPC2.pic <- pic(hind.pc2,phy = lep.tree2)
+forePC1.pic <- pic(fore.pc1,phy = lep.tree2)
+forePC2.pic <- pic(fore.pc2, phy= lep.tree2)
+```
+
+```{r, message= FALSE, echo= FALSE, fig.cap= "Figure 8: Linear regression plot of the dependent variable, hindwing PC1, against the independent variable, forewing PC1"}
+PC.pic <- tibble(
+  hind1=hindPC1.pic,
+  fore1=forePC1.pic,
+  hind2=hindPC2.pic,
+  fore2=forePC2.pic
+)
+
+PC.pic %>% 
+  ggplot(aes(x=fore1,y=hind1))+geom_point()+geom_smooth(method="lm")
+```
+The linear regression plot indicates a strong, negative correlation between PC1 of forewing and hindwing. 
+
+```{r, message= FALSE, echo= FALSE}
+summary(lm(hind1~fore1,PC.pic))
+```
+The results from the plot is supported by linear model above. The negative relationship is statistically significant at near 0% level, with a t-value of -11.562. The adjusted R-squared value of 0.4442 also indicates a single variable in PC1 of the forewing is enough to account for a significant amount of variance in the PC1 of the hindwing. 
+
+<br>
+
+```{r, message= FALSE, echo= FALSE, fig.cap= "Figure 9: Linear regression plot of the dependent variable, hindwing PC1, against the independent variable, forewing PC2"}
+PC.pic %>% 
+  ggplot(aes(x=fore2,y=hind1))+geom_point()+geom_smooth(method="lm")
+```
+In contrast with Figure 8, the positive relationship between hindwing PC1 and forewing PC2 is not as clear and significant.
+
+<div class="comment">
+Isn't this hindwing PC1 vs forewing PC2? We needed just to compare PC2s between fore and hindwing.
+```{r}
+
+grade <- grade-1
+```
+</div>
+
+
+```{r, message= FALSE, echo= FALSE}
+summary(lm(hind1~fore2,PC.pic))
+```
+As expected from Figure 9, the correlation is weak and insignificant at any alpha level. An extremely large amount of variance in the hindwings' PC1 is not explained by forewing PC2, as indicated by the low R-squared values.
+
+```{r, message= FALSE, echo=FALSE}
+summary(lm(hind1~fore1 + fore2,PC.pic))
+summary(lm(hind1~fore1*fore2,PC.pic))
+```
+The two linear models above summarize the effects of PC1 and PC2 of the forewing on PC1 of the hindwing in a multivariate context. In both cases, forewing PC1 maintained its statistical significance and forewing PC2 maintained its insignificance. The low t-value of the interaction term also suggest that PC1 and PC2 of the forewing do not influence each others' effects on hindwing PC1. Since there is also no significant change in the R-squared values from that in Figure 8, the linear model with only forewing PC1 would be the best and most straightforward predictor for hindwing PC1.
+
+##### Predictors of hindwing PC2
+
+```{r, message= FALSE, echo= FALSE, fig.cap= "Figure 10: Linear regression plot of the dependent variable, hindwing PC2, against the independent variable, forewing PC2" }
+PC.pic %>% 
+  ggplot(aes(x=fore2,y=hind2))+geom_point()+geom_smooth(method="lm")
+summary(lm(hind2~fore2,PC.pic))
+```
+The linear model visualized in Figure 10 indicate that PC2 of the forewing is not a statistically significant predictor of PC2 of the hindwing. The slope coefficient is also relatively weak.
+
+```{r, message= FALSE, echo= FALSE, fig.cap= "Figure 11: Linear regression plot of the dependent variable, hindwing PC2, against the independent variable, forewing PC1" }
+PC.pic %>% 
+  ggplot(aes(x=fore1,y=hind2))+geom_point()+geom_smooth(method="lm")
+summary(lm(hind2~fore1,PC.pic))
+```
+According to Figure 11, forewing PC1 appears to be a slightly better predictor of hindwing PC2. The linear model shows that the positive relationship is statistically significant at the 5 percent level. 
+
+```{r, message= FALSE, echo= FALSE}
+summary(lm(hind2~fore2 + fore1,PC.pic))
+summary(lm(hind2~fore2*fore1,PC.pic))
+```
+In a multivariate context, the relationships of forewing PC1 and PC2 with hindwing PC2 do not change. There also is no significant interaction.
+As a summary, there is a very strong and significant negative relationship between hindwing PC1 and forewing PC1. There is also a relatively significant positive relationship between hindwing PC2 and forewing PC1. The shape of the hingwing is therefore correlated with the shape of the forewing to a certain extent.
+
+
+### Discussion
+The Lepidoptera species use a set of wings, a forewing and hindwing for a plethora of survival functions such as movement, reproduction, and eating as well. These pairs of wings provide flight to all of these functions, and without them the species would not be able to transport themselves where necessary to survive. Like many species, their parts, such as these forewings and hindwings have evolved @kawahara2019phylogenomics. 
+	The Papilionoidea group showed a lack of variation in wing size, shown in the results of the PC2. This indicates that there is a conservation of wing size among this group. PC1 and PC2 were transformed into phylogenetic information, and it was found that PC2 did not carry significance, with an R-squared value of 0.4442. It was also found that PC1 did carry significance with an R-squared value of 0.4121. 
+	There are many different reasons for evolutionary changes in wing shapes, such as varying competition levels in the ecology, or constraints due to the environment. Groups of species that live among many different species, especially predators, may experience low aspect ratio, whereas groups who are migrating frequently for varying reasons may have high aspect ratio @kawahara2019phylogenomics. 
+
+<div class="comment">
+I like the discussion!
+</div>
+
+### Contributions
+*Jack: Introduction, methods, and bibliography
+
+*John: Introduction, results, and bibliography
+
+*Philip: Markdown file formatting, R-script coding, results
+
+*Samantha: Discussion
+
+<div class="comment">
+Super well done! Thanks for sticking this out and producing some very high-level analysis! Just need to remember to include a narrative for all your results. Congrats to you all!
+```{r}
+print(grade)
+```
+</div>
+
+### References
+
+
