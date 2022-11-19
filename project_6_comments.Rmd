@@ -126,8 +126,15 @@ hindwing.pca <-hindwings %>%
 
 ```
 
+<!-- for comments -->
+<style>
+div.comment pre { background-color:#ffbbbb; }
+div.comment pre.r { background-color:#ffbbbb; }
+div.comment {color: red;}
+</style>
+
 ### Introduction
-Lepidopteras play valuable roles in the terrestrial ecosystems of the word. They are an order of insects cosnsisting of 160,000 species of butterflies and moths. They have both forewings and hindwings, each playing roles in functions such as flying and attracting mates. Even when their hindwing is cut off, reducing the surface area of their wing by one half, they are able to keep flying. However, with this loss of wing, the ability for linear flight and acceleration is severely weakened (@jantzen2008hindwings). Hindwings are essential in survival, enabling normal flight function and allowing lepidopterans to evade and defend against predators such as bats and birds. The size variation in the forewings and hindwings has allowed the lepidoptera to obtain high levels of flight and speed as well as directional inconsistnacy, which have evolved to pritotize these functions. The purpose of this study is to determine if the rates of wing-shape evolution between the hindwing and forweing are similar and if they have undergone significant shifts among lineages. Furthermore, we wanted to discover if these hindwing and forewing shapes were correlated with each other. The wings will be evaluated and compared through the phylogenetic analysis of over 200 species of Lepidoptera in a certain taxa. ​​
+Lepidopteras play valuable roles in the terrestrial ecosystems of the word. They are an order of insects cosnsisting of 160,000 species of butterflies and moths. They have both forewings and hindwings, each playing roles in functions such as flying and attracting mates. Even when their hindwing is cut off, reducing the surface area of their wing by one half, they are able to keep flying. However, with this loss of wing, the ability for linear flight and acceleration is severely weakened (@jantzen2008hindwings). Hindwings are essential in survival, enabling normal flight function and allowing lepidopterans to evade and defend against predators such as bats and birds. The size variation in the forewings and hindwings has allowed the lepidoptera to obtain high levels of flight and speed as well as directional inconsistnacy, which have evolved to pritotize these functions. The purpose of this study is to determine if the rates of wing-shape evolution between the hindwing and forweing are similar and if they have undergone significant shifts among lineages. Furthermore, we wanted to discover if these hindwing and forewing shapes were correlated with each other. The wings will be evaluated and compared through the phylogenetic analysis of over 200 species of Lepidoptera in a certain taxa. 
 
 
 ### Methods
@@ -276,6 +283,15 @@ names(fore.pc2) <-  forewing.pca2 %>%
 
 ### Results
 
+<div class="comment">
+The figures above are results (minus the tree) and should go in this section. That is, describe the methods in the "methods" section and report the results with graphics and a narrative here.
+```{r}
+grade <-75
+
+grade <- grade-2
+```
+</div>
+
 #### Evolutionary Rates: Hindwing vs. Forewing
 
 ```{r, message= FALSE, include= FALSE}
@@ -308,6 +324,16 @@ hindPC2.BM$sig2.single
 ```
 
 <br>
+
+<div class="comment">
+We need some text here, not just the rate numbers printed out.
+```{r}
+grade <-75
+
+grade <- grade-2
+```
+</div>
+
 
 #### Shifts in Evolutionary Rates
 
@@ -462,6 +488,15 @@ PC.pic %>%
 ```
 In contrast with Figure 8, the positive relationship between hindwing PC1 and forewing PC2 is not as clear and significant.
 
+<div class="comment">
+Isn't this hindwing PC1 vs forewing PC2? We needed just to compare PC2s between fore and hindwing.
+```{r}
+
+grade <- grade-1
+```
+</div>
+
+
 ```{r, message= FALSE, echo= FALSE}
 summary(lm(hind1~fore2,PC.pic))
 ```
@@ -499,15 +534,13 @@ As a summary, there is a very strong and significant negative relationship betwe
 
 ### Discussion
 The Lepidoptera species use a set of wings, a forewing and hindwing for a plethora of survival functions such as movement, reproduction, and eating as well. These pairs of wings provide flight to all of these functions, and without them the species would not be able to transport themselves where necessary to survive. Like many species, their parts, such as these forewings and hindwings have evolved @kawahara2019phylogenomics. 
-<<<<<<< HEAD
-  The Papilionoidea group showed a lack of variation in wing size, shown in the results of the PC2. This indicates that there is a conservation of wing size among this group. PC1 and PC2 were transformed into phylogenetic information, and it was found that PC2 did not carry significance, with an R-squared value of 0.4442. It was also found that PC1 did carry significance with an R-squared value of 0.4121. 
-	There are many different reasons for evolutionary changes in wing shapes, such as varying competition levels in the ecology, or constraints due to the environment. Groups of species that live among many different species, especially predators, may experience low aspect ratio, whereas groups who are migrating frequently for varying reasons may have high aspect ratio @kawahara2019phylogenomics. 
-	
-=======
 	The Papilionoidea group showed a lack of variation in wing size, shown in the results of the PC2. This indicates that there is a conservation of wing size among this group. PC1 and PC2 were transformed into phylogenetic information, and it was found that PC2 did not carry significance, with an R-squared value of 0.4442. It was also found that PC1 did carry significance with an R-squared value of 0.4121. 
 	There are many different reasons for evolutionary changes in wing shapes, such as varying competition levels in the ecology, or constraints due to the environment. Groups of species that live among many different species, especially predators, may experience low aspect ratio, whereas groups who are migrating frequently for varying reasons may have high aspect ratio @kawahara2019phylogenomics. 
 
->>>>>>> 2f13d57e99cccb52ef2a2b61fcb7889ba52ac0c4
+<div class="comment">
+I like the discussion!
+</div>
+
 ### Contributions
 *Jack: Introduction, methods, and bibliography
 
@@ -516,6 +549,13 @@ The Lepidoptera species use a set of wings, a forewing and hindwing for a pletho
 *Philip: Markdown file formatting, R-script coding, results
 
 *Samantha: Discussion
+
+<div class="comment">
+Super well done! Thanks for sticking this out and producing some very high-level analysis! Just need to remember to include a narrative for all your results. Congrats to you all!
+```{r}
+print(grade)
+```
+</div>
 
 ### References
 
