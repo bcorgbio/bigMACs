@@ -1,0 +1,151 @@
+---
+title: "Project 7"
+author: "bigMACs"
+date: "2022-11-27"
+output: html_document
+---
+
+```{r, echo= FALSE, include= FALSE}
+library(ggplot2)
+library(tidyverse)
+library(vroom)
+library(readr)
+library(dplyr)
+library(MuMIn)
+#loading libraries
+
+sub <- list.files(path = "Project 8 data", recursive = TRUE,
+                  pattern = ".csv", 
+                  full.names = TRUE)
+#Reading all files in the class-wide Project 8 data folder and adding them to a list
+
+dat.l <- list()
+#making an empty list
+
+for(i in sub){
+  met.dat<- unlist(strsplit(i,"_"))
+  group <- gsub("Project 8 data/", " ", met.dat[1])
+  subject <- met.dat[2]
+  ang <- as.numeric(met.dat[3])
+  activity <- gsub(".csv","",met.dat[4])
+  
+  dat.l[[i]]<- read_delim(i, delim= " ", col_names = c("Reading","Force","Unit"))%>%
+    mutate(Group=group,Subject=subject, Angle=ang, Activity = activity)
+  
+}
+#Establishing meta-data and extracting information from the file names. Angles needed to be converted from character to numbers in order to calculate AIC values later and means/se of shifts.
+
+dat <- do.call(rbind,dat.l) 
+#Compiling the data into a single tibble named "dat"
+
+
+dat.1 <- arrange(dat, Group, Subject, Angle) %>% 
+  filter(Angle != 22.5)
+#Reorganized the data by ascending order and got rid of an outlier at angle 22.5
+#Group 7, subject 27, had a reading at angle 22.5, which is outside the range of angles we would like to analyze
+
+dat.max_recording <- dat.1 %>% 
+  group_by(Subject, Angle, Activity) %>% 
+  summarize(max_recording = max(Force))
+#Grouped data to find the maximum force of each reading for each person, angle, and treatment (control or fatigue)
+
+dat.max_subject <- dat.1 %>% 
+  group_by(Subject, Activity) %>% 
+  summarize(max_subject = max(Force))
+#To a different tibble, grouped data to find the maximum force for each individual under each activity (control or fatigue), regardless of angle
+
+
+dat.max_joined <- dat.max_subject %>% 
+  left_join(dat.max_recording) %>% 
+  group_by(Subject, Angle, Activity) %>% 
+  mutate(max_norm = max_recording/max_subject)
+#Made a master dataset that contains both maximum subject force and maximum reading force, and calculated the normalized maximum forces for each reading. 
+```
+
+### Introduction
+
+### Methods
+
+### Results
+
+#### Exploring Force Length Relationships
+
+```{r, message = FALSE, echo = FALSE, fig.cap= "Figure 1: The normalized maximum forces produced by each individual under each condition (control or fatigue) across all tested angles between 45° to 157.5°" }
+dat.max_joined %>% 
+  ggplot(aes(Angle,max_norm,col=Activity))+geom_point()+ggtitle("Normalized Maximum Forces vs. Angle") + xlab("Angle (°)") + ylab("Normalized Maximum Forces") + labs(col = "Treatment")
+```
+
+As seen above,the relationship between force and angle appears to be quite noisy. This can be attributed to the sheer size of the data and the fact that not all subjects recorded forces at the same angles. However, a general trend can still be observed. The true maximum forces with a y-value of 1 appear at a smaller angle for the control treatment when compared to that for the fatigued treatment. 
+
+<br>
+
+```{r, echo= FALSE, include = FALSE}
+dat.class_means <- dat.max_joined %>% 
+  group_by(Angle, Activity) %>% 
+  mutate(class_mean = mean(max_norm))
+#Calculating means of normalized maximum forces by activity and angle to compare the force-length relationships in the class-wide data
+```
+
+```{r, message = FALSE, echo = FALSE, fig.cap= "Figure 2: The force length relationship displayed as mean normalized maximum forces produced at each angle and categorized by the treatment."}
+dat.class_means %>% 
+  ggplot(aes(x=Angle, y=class_mean, col = Activity))+geom_point()+ggtitle("Average Normalized Maximum Forces vs. Angle") + xlab("Angle (°)") + ylab("Mean Normalized Maximum Forces") + labs(col = "Treatment")
+```
+When we clean up the data by taking the sample mean of the normalized maximum forces, the trend is clearer. Under control conditions, the force-length relationship curve appears to peak at around 140°. Under fatigue conditions, the force-length relationship curve is still very noisy, because not not all subjects took their data at the same angles, some angle observations are only based on a couple of individuals. But it would appear that the peak occurs around 155°, just before a drop off at the end of the range. A typical force-length relationship would have the maximum output at an intermediate angle. For our study, we would expect that to be at 101.25°. However, both under control and fatigue treatments, our subjects produced a force-length relationship peak at a higher than expected angle. 
+
+<br>
+
+#### Force-Length Relationship Shift 
+
+```{r, echo=FALSE, include=FALSE}
+AICs <- dat.max_joined%>%
+  group_by(Subject,Activity)%>%
+  summarize(
+    m2=AICc(lm(max_norm~poly(Angle,2))), #second order
+    m3=AICc(lm(max_norm~poly(Angle,3))), #third order
+    m4=AICc(lm(max_norm~poly(Angle,4))) #fourth order
+  )%>%
+  pivot_longer(m2:m4,names_to="model",values_to="AICc")
+
+x.pred<-seq(45,157.5,length.out=1000)
+fits <- dat.max_joined%>%
+  group_by(Subject,Activity)%>%
+  summarize(
+    m2=predict(lm(max_norm~poly(Angle,2)),newdata=data.frame(Angle=x.pred)), #second order
+    m3=predict(lm(max_norm~poly(Angle,3)),newdata=data.frame(Angle=x.pred)), #third order
+    m4=predict(lm(max_norm~poly(Angle,4)),newdata=data.frame(Angle=x.pred)) #fourth order
+  )%>%
+  pivot_longer(m2:m4,names_to="model")%>%
+  group_by(Subject,Activity,model)%>%
+  summarize(theta_max=x.pred[which.max(value)])
+
+best.models <- fits%>%
+  left_join(AICs)%>%
+  group_by(Subject,Activity)%>%
+  mutate(best=AICc==min(AICc))%>%
+  filter(best==TRUE)%>%
+  dplyr::select(-best)
+```
+
+```{r, echo= FALSE, message= FALSE}
+best.models%>%
+  filter(Subject != 25) %>% 
+  pivot_wider(id_cols=Subject,names_from = Activity,values_from=theta_max)%>%
+  mutate(shift=fatigue-control)%>%
+  ungroup()%>%
+  summarise(mean.shift=mean(shift),se.shift=sd(shift)/sqrt(length(shift)))
+```
+Based on the best polynomial models, we calculated a mean shift of 8.65° in the maximum force producing angle between the fatigue treatment and the control treatment. This means there was an upwards shift in the force-length relationship when moving from control to fatigued muscles. Although the shift is sizeable, the standard error is also relatively high at 4.35°.
+
+<br>
+
+```{r, echo= FALSE, message= FALSE}
+anova(lm(theta_max~Activity,best.models))
+```
+When we ran an ANOVA variance test between the maximum force producing angle and the treatment, we found that the realtionship, hence the shift in force-length relationship is statistically significant at the 5% level. 
+
+### Discussion
+
+### Contributions
+
+### References
+
