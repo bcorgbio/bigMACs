@@ -22,38 +22,37 @@ for(i in sub){
   
 }
 dat <- do.call(rbind,dat.l) #get data into one tibble
-view(dat)
+
 
 dat.1 <- arrange(dat, Group, Subject, Angle) %>% 
   filter(Angle != 22.5)
 #group 7, subject 27, had a reading at angle 22.5, which is outside the range of angles we would like to analyze
-view(dat.1)
 
 dat.max_recording <- dat.1 %>% 
   group_by(Subject, Angle, Activity) %>% 
   summarize(max_recording = max(Force))
-view(dat.max_recording)
+
 
 dat.max_subject <- dat.1 %>% 
   group_by(Subject, Activity) %>% 
   summarize(max_subject = max(Force))
-view(dat.max_subject)
+
 
 dat.max_joined <- dat.max_subject %>% 
   left_join(dat.max_recording) %>% 
   group_by(Subject, Angle, Activity) %>% 
   mutate(max_norm = max_recording/max_subject)
-view(dat.max_joined)
+
 
 dat.max_joined %>% 
   ggplot(aes(Angle,max_norm,col=Activity))+geom_point()
-view(dat.max_joined)
+
 
 
 dat.class_means <- dat.max_joined %>% 
   group_by(Angle, Activity) %>% 
   mutate(class_mean = mean(max_norm))
-view(dat.class_means)
+
 
 dat.class_means %>% 
   ggplot(aes(x=Angle, y=class_mean, col = Activity))+geom_point() 
@@ -91,7 +90,7 @@ best.models <- fits%>%
   filter(best==TRUE)%>%
   dplyr::select(-best)%>%
   print()
-view(best.models)
+
 anova(lm(theta_max~Activity,best.models))
 
 best.models%>%
