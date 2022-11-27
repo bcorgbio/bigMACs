@@ -69,11 +69,11 @@ dat.max_joined <- dat.max_subject %>%
 
 For this project we wanted to explore the effect of length on muscle force and generation and factor in how fatigue may or may not affect this relationship of FxL. We gain mechanical advantage from the overlapping of myosin-actin cross bridges in the formula MA=Lever input/ lever output. In this experiment we will be measuring the isometric force over the range of motion of the forearm, MVC.  To gather this data of MVC we designed an experiment using an Arduino Sensor, or an Arduino-based force-data acquisition device. 
 
-First, we designed a goniometer, to collect the data for 30 seconds of MVC force. This handcrafted device would provide the angles between the upper and lower arm. The approach we took was to center it on the elbow and measure around 12 different arm angles varying about 11 degrees from 45 to 157.5 degrees. Marking a line along the radius would set our test subject in the correct pulling angle for the experiment. The load cell we used had two hooks, one to be placed around a wooden dowel and the second under the base of a table. The 12 different angles would provide us with the MVC of pur control.
+First, we designed a goniometer, to collect the data for 30 seconds of MVC force. This handcrafted device would provide the angles between the upper and lower arm. The approach we took was to center it on the elbow and measure around 12 different arm angles varying about 11 degrees from 45 to 157.5 degrees. Marking a line along the radius would set our test subject in the correct pulling angle for the experiment. The load cell we used had two hooks, one to be placed around a wooden dowel and the second under the base of a table. The 12 different angles would provide us with the MVC of our control.
 
 For the isokinetic eccentric drops, the tester would need to fatigue their testing arm. Using a book bag and passing it to the fully extended arm, the experimenter would hold it for three seconds before flexing the arm. This cycle would occur for around 3 minutes until the forearm was fatigued. After waiting two minutes, the tester would then repeat the exact experiment for the control. 
 
-
+We took the maximum force recorded during each trial for each individual plus condition and normalized it based on their true maximum force across all angles. The normalized maximum forces are then used along with the tested angles to analyze the force-length relationship. To record accurate relationships and maximum force producing angles, we fit the best polynomial model for each trial under AIC conditions. The max force angles under fatigue and control conditions were used to calculate the mean shift between the two conditions. The significance of this shift was also tested using ANOVA.
 
 
 ### Results
@@ -144,14 +144,14 @@ best.models%>%
   ungroup()%>%
   summarise(mean.shift=mean(shift),se.shift=sd(shift)/sqrt(length(shift)))
 ```
-Based on the best polynomial models, we calculated a mean shift of 8.65° in the maximum force producing angle between the fatigue treatment and the control treatment. This means there was an upwards shift in the force-length relationship when moving from control to fatigued muscles. Although the shift is sizeable, the standard error is also relatively high at 4.35°.
+Based on the best polynomial models, we calculated a mean shift of 8.65° in the maximum force producing angle between the fatigue treatment and the control treatment. This means there was an upwards shift in the force-length relationship when moving from control to fatigued muscles. Although the shift is sizable, the standard error is also relatively high at 4.35°.
 
 <br>
 
 ```{r, echo= FALSE, message= FALSE}
 anova(lm(theta_max~Activity,best.models))
 ```
-When we ran an ANOVA variance test between the maximum force producing angle and the treatment, we found that the realtionship, hence the shift in force-length relationship is statistically significant at the 5% level. 
+When we ran an ANOVA variance test between the maximum force producing angle and the treatment, we found that the relationship, hence the shift in force-length relationship is statistically significant at the 5% level. 
 
 ### Discussion
 The force-length relationship is a fundamental property of skeletal muscles. It signifies that the greatest force is outputted at its ideal/resting length, and the least force is generated when the muscle is stretched or shortened past this ideal length. This project explored the effect of length on muscle force generation, specifically the impact of fatigue on the FL relationship of the human upper limbs. Previous research has demonstrated that the FL relationship shifts promptly and long after eccentric fatigue (@yeung2008shift). 
