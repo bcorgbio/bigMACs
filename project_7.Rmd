@@ -67,6 +67,15 @@ dat.max_joined <- dat.max_subject %>%
 
 ### Methods
 
+For this project we wanted to explore the effect of length on muscle force and generation and factor in how fatigue may or may not affect this relationship of FxL. We gain mechanical advantage from the overlapping of myosin-actin cross bridges in the formula MA=Lever input/ lever output. In this experiment we will be measuring the isometric force over the range of motion of the forearm, MVC.  To gather this data of MVC we designed an experiment using an Arduino Sensor, or an Arduino-based force-data acquisition device. 
+
+First, we designed a goniometer, to collect the data for 30 seconds of MVC force. This handcrafted device would provide the angles between the upper and lower arm. The approach we took was to center it on the elbow and measure around 12 different arm angles varying about 11 degrees from 45 to 157.5 degrees. Marking a line along the radius would set our test subject in the correct pulling angle for the experiment. The load cell we used had two hooks, one to be placed around a wooden dowel and the second under the base of a table. The 12 different angles would provide us with the MVC of pur control.
+
+For the isokinetic eccentric drops, the tester would need to fatigue their testing arm. Using a book bag and passing it to the fully extended arm, the experimenter would hold it for three seconds before flexing the arm. This cycle would occur for around 3 minutes until the forearm was fatigued. After waiting two minutes, the tester would then repeat the exact experiment for the control. 
+
+
+
+
 ### Results
 
 #### Exploring Force Length Relationships
@@ -152,6 +161,13 @@ Our class wide study found a mean shift of 8.65 degrees in the maximum force-pro
 Further studies could be undergone exploring this relationship to find the effect of force and the length over a larger period of time. Studies could determine which angle/length fatigues muscles at a faster rate or even examine how these angles impact the recovery times of specific muscles. A previous study examined a similar relationship and found that the shift in the angle-force curve was proportional to the degrees of muscle damage. This study aimed to explore and compare the magnitude and time course of the change in the angle-force curves, both before and four consecutive days after eccentric and isometric exercise (@philippou2004changes). Further studies between fatigue and time within the FL relationship could point to an optimal angle/length and time to work a specific muscle, enhancing individuals' physical therapy and recovery times.
 
 ### Contributions
+Introduction: Samantha
+
+Methods: John 
+
+Results/Code: Philip
+
+Discussion: Jack
 
 ### References
 
