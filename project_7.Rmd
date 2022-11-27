@@ -3,6 +3,7 @@ title: "Project 7"
 author: "bigMACs"
 date: "2022-11-27"
 output: html_document
+bibliography: Bib_7.bib
 ---
 
 ```{r, echo= FALSE, include= FALSE}
@@ -144,6 +145,11 @@ anova(lm(theta_max~Activity,best.models))
 When we ran an ANOVA variance test between the maximum force producing angle and the treatment, we found that the realtionship, hence the shift in force-length relationship is statistically significant at the 5% level. 
 
 ### Discussion
+The force-length relationship is a fundamental property of skeletal muscles. It signifies that the greatest force is outputted at its ideal/resting length, and the least force is generated when the muscle is stretched or shortened past this ideal length. This project explored the effect of length on muscle force generation, specifically the impact of fatigue on the FL relationship of the human upper limbs. Previous research has demonstrated that the FL relationship shifts promptly and long after eccentric fatigue (@yeung2008shift). 
+
+Our class wide study found a mean shift of 8.65 degrees in the maximum force-producing angle between the fatigue and control treatments. These findings demonstrated an apparent upwards shift in the FL relationships when moving from the controlled to tired muscles. This shift was statistically significant at the 5% level, as confirmed through an ANOVA variance test. This data provides further analysis of human movement and muscle function, specifically upper arm biomechanics.
+
+Further studies could be undergone exploring this relationship to find the effect of force and the length over a larger period of time. Studies could determine which angle/length fatigues muscles at a faster rate or even examine how these angles impact the recovery times of specific muscles. A previous study examined a similar relationship and found that the shift in the angle-force curve was proportional to the degrees of muscle damage. This study aimed to explore and compare the magnitude and time course of the change in the angle-force curves, both before and four consecutive days after eccentric and isometric exercise (@philippou2004changes). Further studies between fatigue and time within the FL relationship could point to an optimal angle/length and time to work a specific muscle, enhancing individuals' physical therapy and recovery times.
 
 ### Contributions
 
