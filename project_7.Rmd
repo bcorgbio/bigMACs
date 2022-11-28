@@ -14,15 +14,12 @@ library(readr)
 library(dplyr)
 library(MuMIn)
 #loading libraries
-
 sub <- list.files(path = "Project 8 data", recursive = TRUE,
                   pattern = ".csv", 
                   full.names = TRUE)
 #Reading all files in the class-wide Project 8 data folder and adding them to a list
-
 dat.l <- list()
 #making an empty list
-
 for(i in sub){
   met.dat<- unlist(strsplit(i,"_"))
   group <- gsub("Project 8 data/", " ", met.dat[1])
@@ -35,27 +32,20 @@ for(i in sub){
   
 }
 #Establishing meta-data and extracting information from the file names. Angles needed to be converted from character to numbers in order to calculate AIC values later and means/se of shifts.
-
 dat <- do.call(rbind,dat.l) 
 #Compiling the data into a single tibble named "dat"
-
-
 dat.1 <- arrange(dat, Group, Subject, Angle) %>% 
   filter(Angle != 22.5)
 #Reorganized the data by ascending order and got rid of an outlier at angle 22.5
 #Group 7, subject 27, had a reading at angle 22.5, which is outside the range of angles we would like to analyze
-
 dat.max_recording <- dat.1 %>% 
   group_by(Subject, Angle, Activity) %>% 
   summarize(max_recording = max(Force))
 #Grouped data to find the maximum force of each reading for each person, angle, and treatment (control or fatigue)
-
 dat.max_subject <- dat.1 %>% 
   group_by(Subject, Activity) %>% 
   summarize(max_subject = max(Force))
 #To a different tibble, grouped data to find the maximum force for each individual under each activity (control or fatigue), regardless of angle
-
-
 dat.max_joined <- dat.max_subject %>% 
   left_join(dat.max_recording) %>% 
   group_by(Subject, Angle, Activity) %>% 
@@ -65,6 +55,7 @@ dat.max_joined <- dat.max_subject %>%
 
 ### Introduction
 
+The purpose of this study was to examine the force-length relationship of muscles of the forearm, and determine the shift of this relationship when the muscles are fatigued and when they are not. According to previous studies completed,"there was a significant shift in the peak torque angle to longer muscle lengths in the eccentrically-exercised leg immediately and on the following two days after exercise when compared with baseline [@yeung2008shift]. This hypothesis is to be confirmed in this study by collecting class-wide data from both fatigued and non-fatigued muscles, and the resulting shift was analyzed.   
 ### Methods
 
 For this project we wanted to explore the effect of length on muscle force and generation and factor in how fatigue may or may not affect this relationship of FxL. We gain mechanical advantage from the overlapping of myosin-actin cross bridges in the formula MA=Lever input/ lever output. In this experiment we will be measuring the isometric force over the range of motion of the forearm, MVC.  To gather this data of MVC we designed an experiment using an Arduino Sensor, or an Arduino-based force-data acquisition device. 
@@ -115,7 +106,6 @@ AICs <- dat.max_joined%>%
     m4=AICc(lm(max_norm~poly(Angle,4))) #fourth order
   )%>%
   pivot_longer(m2:m4,names_to="model",values_to="AICc")
-
 x.pred<-seq(45,157.5,length.out=1000)
 fits <- dat.max_joined%>%
   group_by(Subject,Activity)%>%
@@ -127,7 +117,6 @@ fits <- dat.max_joined%>%
   pivot_longer(m2:m4,names_to="model")%>%
   group_by(Subject,Activity,model)%>%
   summarize(theta_max=x.pred[which.max(value)])
-
 best.models <- fits%>%
   left_join(AICs)%>%
   group_by(Subject,Activity)%>%
@@ -170,4 +159,3 @@ Results/Code: Philip
 Discussion: Jack
 
 ### References
-
