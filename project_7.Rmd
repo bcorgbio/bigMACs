@@ -134,7 +134,7 @@ best.models%>%
   ungroup()%>%
   summarise(mean.shift=mean(shift),se.shift=sd(shift)/sqrt(length(shift)))
 ```
-Based on the best polynomial models, we calculated a mean shift of 8.65° in the maximum force producing angle between the fatigue treatment and the control treatment. This means there was an upwards shift in the force-length relationship when moving from control to fatigued muscles. Although the shift is sizable, the standard error is also relatively high at 4.35°.
+Based on the best polynomial models, we calculated a mean shift of 8.65° in the maximum force producing angle between the fatigue treatment and the control treatment. This means there was an upwards shift in the force-length relationship when moving from control to fatigued muscles. Although the shift is sizable, the standard error is also relatively high at 4.35°. While we have controlled for individual differences by having subjects conduct both control and fatigue treatments, there are still a number of reasons for the high variance such as small sample sizes at specific angles or varying measuring techniques which can bias the trend and the calculations. 
 
 <br>
 
